@@ -9,12 +9,75 @@ generator client {
 }
 
 model User {
-  id           String    @id @default(uuid())
-  firstName    String    @map("first_name")
-  lastName     String    @map("last_name")
-  email        String    @unique
-  country      String?
-  dateOfBirth  DateTime? @map("date_of_birth")
-  passwordHash String    @map("password_hash")
-  isVerified   Boolean   @default(false) @map("is_verified")
+  id          String    @id @default(uuid())
+  userName    String    @unique @map("user_name")
+  password    String
+  firstName   String    @map("first_name")
+  lastName    String    @map("last_name")
+  email       String    @unique
+  phone       String    @unique
+  country     String?
+  dateOfBirth DateTime? @map("date_of_birth")
+  isVerified  Boolean   @default(false) @map("is_verified")
+
+  files    File[]
+  Bookmark Bookmark[]
+  token    Token[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model File {
+  id            String @id @default(uuid())
+  title         String
+  originalName  String
+  mimeType      String @map("mime_type")
+  fileSize      Int    @map("file_size")
+  filePath      String @map("file_path")
+  contentLength Int    @map("content_length")
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  Bookmark Bookmark[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("files")
+}
+
+model Bookmark {
+  id           String @id @default(uuid())
+  title        String
+  textFragment String @map("text_fragment")
+  startChar    Int    @map("start_char")
+  endChar      Int    @map("end_char")
+
+  fileId String @map("file_id")
+  file   File   @relation(fields: [fileId], references: [id])
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([fileId])
+  @@index([userId])
+  @@map("bookmarks")
+}
+
+model Token {
+  token   String   @unique
+  expires DateTime
+  userId  String   @map("user_id")
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("tokens")
 }
