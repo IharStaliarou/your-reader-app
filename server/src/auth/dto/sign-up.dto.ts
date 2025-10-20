@@ -1,7 +1,12 @@
 import { CreateUserDto } from '@user/dto/create-user.dto';
-import { IsStrongPassword, MinLength, Validate } from 'class-validator';
+import {
+  IsOptional,
+  IsStrongPassword,
+  MinLength,
+  Validate,
+} from 'class-validator';
 import { MatchPasswordConstraint } from '@validators/match-passwords-constraint';
-export class SignUpDto extends CreateUserDto {
+export class SignUpUserDto extends CreateUserDto {
   @IsStrongPassword(
     {},
     {
@@ -11,5 +16,6 @@ export class SignUpDto extends CreateUserDto {
   )
   @MinLength(8, { message: 'Password must be at least 8 characters long' })
   @Validate(MatchPasswordConstraint)
+  @IsOptional()
   repeatPassword: string;
 }

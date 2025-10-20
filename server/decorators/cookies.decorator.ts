@@ -5,5 +5,5 @@ export const Cookies = createParamDecorator(
     const request = ctx.switchToHttp().getRequest();
     const cookies = request.cookies;
     return key ? cookies?.[key] : cookies;
-  }
+  },
 );

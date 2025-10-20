@@ -7,10 +7,11 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { User } from '@prisma/client';
+
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from '@prisma/client';
 
 @Controller('user')
 export class UserController {
@@ -34,22 +35,25 @@ export class UserController {
   @Get('find-by-username/:userName')
   async findByUsername(@Param('userName') userName: string) {
     const user: User = await this.userService.findByUsername(userName);
-    delete user.password;
-    return user;
+    const userWithoutPassword = { ...user };
+    delete userWithoutPassword.password;
+    return userWithoutPassword;
   }
 
   @Get('find-by-email/:email')
   async findByEmail(@Param('email') email: string) {
     const user: User = await this.userService.findByEmail(email);
-    delete user.password;
-    return user;
+    const userWithoutPassword = { ...user };
+    delete userWithoutPassword.password;
+    return userWithoutPassword;
   }
 
   @Get('find-by-phone/:phone')
   async findByPhone(@Param('phone') phone: string) {
     const user: User = await this.userService.findByPhone(phone);
-    delete user.password;
-    return user;
+    const userWithoutPassword = { ...user };
+    delete userWithoutPassword.password;
+    return userWithoutPassword;
   }
 
   @Patch(':id')

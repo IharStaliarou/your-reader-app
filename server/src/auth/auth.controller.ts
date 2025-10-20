@@ -7,18 +7,21 @@ import {
   Logger,
   Post,
   Res,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { SignUpDto } from './dto/signup.dto';
-import { LoginDto } from './dto/login.dto';
-import { Public } from './guards/jwt.auth.guard';
+import { ConfigService } from '@nestjs/config';
 import type { Response } from 'express';
+
+import { AuthService } from './auth.service';
+import { SignUpUserDto } from './dto/sign-up.dto';
+import { SignInDto } from './dto/sign-in.dto';
+import { Public } from './guards/jwt.auth.guard';
 import { TokenService } from '@token/token.service';
 import { Cookies } from '@decorators/cookies.decorator';
-import { getCookieOptions } from 'src/utils/cookie-options.util';
-import { ConfigService } from '@nestjs/config';
-
-const { REFRESH_TOKEN } = process.env;
+import { getCookieOptions } from '@utils/cookie-options.util';
+import { VerificationTokenService } from './verification-token.service';
+import { VerificationDto } from './dto/verification.dto';
+import { UserService } from '@user/user.service';
 
 @Public()
 @Controller('auth')
@@ -29,11 +32,13 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly tokenService: TokenService,
     private readonly configService: ConfigService,
+    private readonly verificationTokenService: VerificationTokenService,
+    private readonly userService: UserService,
   ) {}
 
   @Post('signup')
-  async signup(@Body() signupDto: SignUpDto) {
-    const createdUser = await this.authService.signup(signupDto);
+  async signUp(@Body() signUpDto: SignUpUserDto) {
+    const createdUser = await this.authService.signUp(signUpDto);
 
     if (!createdUser) {
       const errorMessage = 'Error creating user';
@@ -44,35 +49,63 @@ export class AuthController {
     return createdUser;
   }
 
-  @Post('login')
-  async login(@Body() loginDto: LoginDto, @Res() res: Response) {
-    const tokens = await this.authService.login(loginDto);
+  @Post('signin')
+  async signIn(@Body() signInDto: SignInDto, @Res() res: Response) {
+    const tokens = await this.authService.signIn(signInDto);
 
     if (!tokens) {
-      const errorMessage = 'Error logging in';
+      const errorMessage = 'Error signing in';
       this.logger.error(errorMessage);
       throw new BadRequestException(errorMessage);
     }
 
     this.tokenService.setRefreshTokenCookie(tokens, res);
+    return res.status(HttpStatus.OK).json({ accessToken: tokens.accessToken });
   }
 
-  @Get('logout')
-  async logout(
-    @Cookies(REFRESH_TOKEN) refreshToken: string,
+  @Get('signout')
+  async signOut(
+    @Cookies('refresh_token') refreshToken: string,
     @Res() res: Response,
   ) {
+    const refreshTokenName =
+      this.configService.get('REFRESH_TOKEN_NAME') || 'refresh_token';
+
     if (!refreshToken) {
+      res.cookie(refreshTokenName, '', getCookieOptions(new Date(0)));
       res.sendStatus(HttpStatus.OK);
       return;
     }
 
-    this.authService.deleteRefreshToken(refreshToken);
+    await this.authService.deleteRefreshToken(refreshToken);
 
-    const refreshTokenName = this.configService.get('REFRESH_TOKEN');
-    const today = new Date();
+    res.cookie(refreshTokenName, '', getCookieOptions(new Date(0)));
 
-    res.cookie(refreshTokenName, '', getCookieOptions(today));
     res.sendStatus(HttpStatus.OK);
+    return;
+  }
+
+  @Post('verify')
+  @Public()
+  async verifyEmail(@Body() verificationDto: VerificationDto) {
+    try {
+      const payload = this.verificationTokenService.verifyVerificationToken(
+        verificationDto.token,
+      );
+
+      const verifiedUser = await this.userService.updateVerificationStatus(
+        payload.userId,
+        true,
+      );
+
+      return {
+        message: 'Email is successfully verified',
+        email: verifiedUser.email,
+      };
+    } catch (error) {
+      throw new UnauthorizedException(
+        error.message || 'Verification token is invalid. Please try again.',
+      );
+    }
   }
 }

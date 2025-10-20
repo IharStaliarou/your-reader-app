@@ -1,14 +1,15 @@
-import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Response } from 'express';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import dayjs from 'dayjs';
 import { v4 } from 'uuid';
 import { Token, User } from '@prisma/client';
-import { PrismaService } from '@prisma/prisma.service';
-import { UserService } from '@user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+
+import { PrismaService } from '@prisma/prisma.service';
+import { UserService } from '@user/user.service';
 import { ITokens } from './interfaces/interfaces';
-import { Response } from 'express';
-import { getCookieOptions } from 'src/utils/cookie-options.util';
+import { getCookieOptions } from '@utils/cookie-options.util';
 
 @Injectable()
 export class TokenService {
@@ -33,8 +34,8 @@ export class TokenService {
     const expirationDate = dayjs(token.expires);
     const isExpired = expirationDate.isBefore(today);
 
-    if (!token.expires || isExpired) {
-      throw new UnauthorizedException();
+    if (isExpired) {
+      throw new UnauthorizedException('Refresh token expired');
     }
 
     const user = await this.userService.findById(token.userId);
@@ -85,12 +86,11 @@ export class TokenService {
 
     const { expires, token } = tokens.refreshToken;
 
-    // res.cookie(name, validateHeaderValue, options)
     const cookieExpDate = dayjs(expires).toDate();
 
-    const refreshToken = this.configService.get('REFRESH_TOKEN');
+    const refreshToken =
+      this.configService.get('REFRESH_TOKEN_NAME') || 'refresh_token';
 
     res.cookie(refreshToken, token, getCookieOptions(cookieExpDate));
-    res.status(HttpStatus.CREATED).json({ accessToken: tokens.accessToken });
   }
 }

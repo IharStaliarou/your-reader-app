@@ -5,10 +5,12 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
+import { genSaltSync, hashSync } from 'bcryptjs';
+import { User } from '@prisma/client';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '@prisma/prisma.service';
-import { genSaltSync, hashSync } from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -17,7 +19,6 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto) {
     const hashedPassword = this.hashPassword(createUserDto.password);
-
     const userData = { ...createUserDto, password: hashedPassword };
 
     const existingUserByUsername = await this.findByUsername(
@@ -139,6 +140,27 @@ export class UserService {
       .catch((error) => {
         throw new Error(`Error deleting user: ${error.message}`);
       });
+  }
+
+  async updateVerificationStatus(
+    userId: string,
+    isVerified: boolean,
+  ): Promise<User> {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      this.logger.error(
+        `User with ID ${userId} not found during verification.`,
+      );
+      throw new NotFoundException('User not found.');
+    }
+
+    return this.prismaService.user.update({
+      where: { id: userId },
+      data: { isVerified: isVerified },
+    });
   }
 
   private hashPassword(password: string) {

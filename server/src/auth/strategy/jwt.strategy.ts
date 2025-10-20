@@ -2,8 +2,9 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { IJwtPayload } from '@auth/interfaces/interfaces';
 import { User } from '@prisma/client';
+
+import { IJwtPayload } from '@auth/interfaces/interfaces';
 import { UserService } from '@user/user.service';
 
 @Injectable()
@@ -28,8 +29,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         return null;
       });
 
-    if (!user) {
-      throw new UnauthorizedException();
+    if (!user.isVerified) {
+      this.logger.warn(
+        `Unverified user ${user.email} tried to access protected route.`,
+      );
+      throw new UnauthorizedException('Email not verified.');
     }
 
     return jwtPayload;

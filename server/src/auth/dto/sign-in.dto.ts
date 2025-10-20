@@ -1,7 +1,6 @@
-import { CreateUserDto } from '@user/dto/create-user.dto';
 import { IsString, IsStrongPassword, Length, MinLength } from 'class-validator';
 
-export class LoginDto {
+export class SignInDto {
   @IsString({ message: 'Username must be a string' })
   @Length(2, 20, { message: 'Username must be between 2 and 20 characters' })
   userName: string;
