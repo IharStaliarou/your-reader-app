@@ -69,7 +69,7 @@ export class AuthController {
     @Res() res: Response,
   ) {
     const refreshTokenName =
-      this.configService.get('REFRESH_TOKEN_NAME') || 'refresh_token';
+      this.configService.get('REFRESH_TOKEN') || 'refresh_token';
 
     if (!refreshToken) {
       res.cookie(refreshTokenName, '', getCookieOptions(new Date(0)));
@@ -80,7 +80,6 @@ export class AuthController {
     await this.authService.deleteRefreshToken(refreshToken);
 
     res.cookie(refreshTokenName, '', getCookieOptions(new Date(0)));
-
     res.sendStatus(HttpStatus.OK);
     return;
   }
