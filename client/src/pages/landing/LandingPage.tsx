@@ -10,7 +10,6 @@ const LandingPage = () => {
   const [titleAnimationFinished, setTitleAnimationFinished] = useState(false);
   const [descriptionAnimationFinished, setDescriptionAnimationFinished] =
     useState(false);
-
   const handleTitleAnimationEnd = () => {
     setTitleAnimationFinished(true);
   };

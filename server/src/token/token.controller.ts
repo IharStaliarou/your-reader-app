@@ -19,7 +19,7 @@ export class TokenController {
   @Get('refresh-tokens')
   async refreshTokens(
     @Cookies(REFRESH_TOKEN) refreshToken: string,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
   ) {
     if (!refreshToken) {
       throw new UnauthorizedException();
@@ -31,5 +31,7 @@ export class TokenController {
     }
 
     this.tokenService.setRefreshTokenCookie(tokens, res);
+
+    return { accessToken: tokens.accessToken };
   }
 }

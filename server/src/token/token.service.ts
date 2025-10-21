@@ -89,7 +89,7 @@ export class TokenService {
     const cookieExpDate = dayjs(expires).toDate();
 
     const refreshToken =
-      this.configService.get('REFRESH_TOKEN_NAME') || 'refresh_token';
+      this.configService.get('REFRESH_TOKEN') || 'refresh_token';
 
     res.cookie(refreshToken, token, getCookieOptions(cookieExpDate));
   }
