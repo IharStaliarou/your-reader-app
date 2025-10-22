@@ -32,6 +32,7 @@ export const AuthFormTabs = () => {
           color='primary'
           className='bg-white rounded-full shadow-lg'
         >
+          {/* TODO: fix - two btn redirect to auth/signin */}
           <ToggleButton value='sign-in'>Sign in</ToggleButton>
           <ToggleButton value='sign-up'>Sign up</ToggleButton>
         </ToggleButtonGroup>

@@ -10,6 +10,7 @@ export const Header = () => {
 
   const { isSignedIn, signOut } = useAuth();
 
+  // TODO: fix - hidden SignOut btn after sign out
   const signOutMutation = useSignOutMutation(navigate);
 
   const handleNavigate = (path: string) => {

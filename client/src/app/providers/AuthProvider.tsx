@@ -1,5 +1,5 @@
+import { setOnSignOutCallback } from '@/shared/api/instance.api';
 import {
-  createContext,
   useCallback,
   useContext,
   useEffect,
@@ -9,14 +9,8 @@ import {
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { setOnSignOutCallback } from '@/features/auth/api/auth.api';
 import { toast } from 'react-toastify';
-
-interface IAuthContextProps {
-  isSignedIn: boolean;
-  signIn: () => void;
-  signOut: () => void;
-}
+import { AuthContext } from '../contexts/AuthContext';
 
 interface IAuthProviderProps {
   children: ReactNode;
@@ -29,8 +23,6 @@ export const useAuth = () => {
   }
   return context;
 };
-
-const AuthContext = createContext<IAuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: IAuthProviderProps) => {
   const [isSignedIn, setIsSignedIn] = useState(
