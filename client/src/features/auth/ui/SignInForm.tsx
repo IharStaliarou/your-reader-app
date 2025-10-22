@@ -4,12 +4,18 @@ import { TextField, Button, Box } from '@mui/material';
 
 import { SignInSchema, type ISignInData } from '../lib/validation';
 import { useSignInMutation } from '../api/auth.api';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/app/providers/AuthProvider';
 
 export const SignInForm = () => {
-  const { mutate: signInMutate, isPending } = useSignInMutation();
+  const navigate = useNavigate();
+
+  const { signIn } = useAuth();
+
+  const { mutate: signInMutate, isPending } = useSignInMutation(navigate);
 
   const {
-    register: signIn,
+    register,
     handleSubmit,
     formState: { errors },
   } = useForm<ISignInData>({
@@ -17,7 +23,11 @@ export const SignInForm = () => {
   });
 
   const handleFormSubmit = (data: ISignInData) => {
-    signInMutate(data);
+    signInMutate(data, {
+      onSuccess: () => {
+        signIn();
+      },
+    });
   };
 
   return (
@@ -30,7 +40,7 @@ export const SignInForm = () => {
         label='Username'
         variant='outlined'
         fullWidth
-        {...signIn('userName')}
+        {...register('userName')}
         error={!!errors.userName}
         helperText={errors.userName?.message}
       />
@@ -40,7 +50,7 @@ export const SignInForm = () => {
         variant='outlined'
         type='password'
         fullWidth
-        {...signIn('password')}
+        {...register('password')}
         error={!!errors.password}
         helperText={errors.password?.message}
       />
