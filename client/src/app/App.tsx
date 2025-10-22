@@ -6,6 +6,8 @@ import LandingPage from '@pages/landing/LandingPage';
 import VerificationPage from '@pages/verification/VerificationPage';
 import AuthPage from '@pages/auth/AuthPage';
 import { AuthProvider } from './providers/AuthProvider';
+import { ProtectedRoute } from '@/shared/routes/ProtectedRoute';
+import UploadPage from '@/pages/upload/UploadPage';
 
 function App() {
   return (
@@ -16,6 +18,11 @@ function App() {
             <Route path='/' element={<LandingPage />} />
             <Route path='/auth' element={<AuthPage />} />
             <Route path='/verify' element={<VerificationPage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path='/upload' element={<UploadPage />} />
+              {/* TODO: add profile page */}
+              <Route path='/profile' element={<div>Profile page</div>} />
+            </Route>
           </Routes>
         </AuthProvider>
       </QueryProvider>
