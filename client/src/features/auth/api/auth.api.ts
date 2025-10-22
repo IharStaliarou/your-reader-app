@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
+import axios, { type AxiosError } from 'axios';
+import { toast } from 'react-toastify';
 
 import { type ISignInData, type ICreateUserData } from '../lib/validation';
 import {
@@ -13,7 +14,7 @@ import { sendVerificationEmail } from '@api/emailjs.api';
 
 let onLogoutCallback: (() => void) | null = null;
 
-export const setOnLogoutCallback = (callback: () => void) => {
+export const setOnSignOutCallback = (callback: () => void) => {
   onLogoutCallback = callback;
 };
 
@@ -69,12 +70,22 @@ $api.interceptors.response.use(
   }
 );
 
-const signInUser = async (data: ISignInData) => {
+interface IAuthResponse {
+  accessToken: string;
+  refreshToken: string;
+}
+
+const signInUser = async (data: ISignInData): Promise<IAuthResponse> => {
   const response = await $api.post(`${API_BASE_URL}/auth/signin`, data);
   return response.data;
 };
 
-const signUpUser = async (data: ICreateUserData) => {
+interface ISignUpResponse {
+  user: { email: string; userName: string };
+  token: string;
+}
+
+const signUpUser = async (data: ICreateUserData): Promise<ISignUpResponse> => {
   const response = await $api.post(`${API_SIGN_UP_URL}`, data);
   return response.data as {
     user: { email: string; userName: string };
@@ -92,19 +103,20 @@ const verifyEmail = async (token: string) => {
   return response.data;
 };
 
-export const useSignInMutation = () => {
+export const useSignInMutation = (navigate: (path: string) => void) => {
+  // TODO: add useNavigate
   return useMutation({
     mutationFn: signInUser,
     // TODO: add type for data
-    onSuccess: (data: any) => {
-      localStorage.setItem('accessToken', data?.accessToken);
-      window.location.href = '/profile'; // TODO: change on navigate
-      alert('You have successfully signed in.'); // TODO: add toaster
+    onSuccess: (data: IAuthResponse) => {
+      localStorage.setItem('accessToken', data.accessToken);
+      navigate('/profile');
+      toast.success('You have successfully signed in.');
     },
-    onError: (error: any) => {
+    onError: (error: AxiosError<any>) => {
       const message =
         error.response?.data?.message || 'Uncorrect username or password';
-      alert(`Error signing in: ${message}`);
+      toast.error(`Error signing in: ${message}`);
     },
   });
 };
@@ -115,13 +127,14 @@ export const useSignUpMutation = () => {
     onSuccess: (data) => {
       sendVerificationEmail(data.user.email, data.token, data.user.userName)
         .then(() => {
-          alert(
-            'You have successfully signed up. Please check your email for verification.' // TODO: add toaster
+          toast.success(
+            'You have successfully signed up. Please check your email for verification.'
           );
         })
         .catch((e) => {
           console.error('Error sending email: ', e);
-          alert(
+          // TODO: add functional for resend verification link
+          toast.error(
             'You have successfully signed up, but verification email could not be sent. Please try again.'
           );
         });
@@ -130,7 +143,7 @@ export const useSignUpMutation = () => {
       const message =
         error.response?.data?.message ||
         'Uncorrect username, email or password';
-      alert(`Error signing up: ${message}`);
+      toast.error(`Error signing up: ${message}`);
     },
   });
 };
@@ -139,13 +152,13 @@ export const useSignOutMutation = (navigate: (path: string) => void) => {
   return useMutation({
     mutationFn: signOutUser,
     onSuccess: () => {
-      alert('You have successfully signed out.');
+      toast.success('You have successfully signed out.');
       localStorage.removeItem('accessToken');
       navigate('/');
     },
     onError: (error: any) => {
       console.error('Sign out error:', error);
-      alert('Failed to sign out. Please try again.');
+      toast.error('Failed to sign out. Please try again.');
     },
   });
 };
