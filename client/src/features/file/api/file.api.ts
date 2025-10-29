@@ -2,10 +2,10 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 
-// TODO: rebase to shared api
 import { API_FILE_UPLOAD_URL } from '@constants/url.constants';
 import { $api } from '@/shared/api/instance.api';
 
+// TODO: rebase to interfaces
 interface IFileUploadData {
   file: File;
 }
@@ -14,6 +14,7 @@ interface IFileUploadResponse {
   fileId: string;
   fileName: string;
   message: string;
+  path: string;
 }
 
 const uploadFile = async ({

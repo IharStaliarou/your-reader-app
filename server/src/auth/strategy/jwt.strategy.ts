@@ -29,6 +29,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         return null;
       });
 
+    if (!user) {
+      throw new UnauthorizedException('User not found.');
+    }
+
     if (!user.isVerified) {
       this.logger.warn(
         `Unverified user ${user.email} tried to access protected route.`,
@@ -36,6 +40,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Email not verified.');
     }
 
-    return jwtPayload;
+    return user;
   }
 }

@@ -7,6 +7,7 @@ import { JwtAuthGuard } from '@auth/guards/jwt.auth.guard';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { TokenModule } from './token/token.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { TokenModule } from './token/token.module';
     UserModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TokenModule,
+    FileModule,
   ],
   controllers: [],
 
