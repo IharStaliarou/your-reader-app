@@ -1,11 +1,12 @@
-import { CreateUserDto } from '@user/dto/create-user.dto';
 import {
   IsOptional,
   IsStrongPassword,
   MinLength,
   Validate,
 } from 'class-validator';
+
 import { MatchPasswordConstraint } from '@validators/match-passwords-constraint';
+import { CreateUserDto } from '@user/dto/create-user.dto';
 export class SignUpUserDto extends CreateUserDto {
   @IsStrongPassword(
     {},

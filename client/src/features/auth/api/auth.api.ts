@@ -1,39 +1,35 @@
-import { useMutation } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 import { sendVerificationEmail } from '@api/emailjs.api';
-import { $api } from '@/shared/api/instance.api';
 import {
   signInUser,
   signOutUser,
   signUpUser,
   verifyEmail,
-  type IAuthResponse,
 } from './auth.methods';
+import type {
+  IAuthResponse,
+  ISignUpResponse,
+} from '@shared/interfaces/auth.interface';
+import { extractErrorMessage } from '@/shared/utils/error.utils';
 
-$api.interceptors.request.use((config) => {
-  const accessToken = localStorage.getItem('accessToken');
-  if (accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`;
-  }
-  return config;
-});
-
-export const useSignInMutation = (navigate: (path: string) => void) => {
-  // TODO: add useNavigate
+export const useSignInMutation = () => {
   return useMutation({
     mutationFn: signInUser,
-    // TODO: add type for data
     onSuccess: (data: IAuthResponse) => {
       localStorage.setItem('accessToken', data.accessToken);
-      navigate('/profile');
       toast.success('You have successfully signed in.');
+      return data;
     },
     onError: (error: AxiosError<any>) => {
-      const message =
-        error.response?.data?.message || 'Uncorrect username or password';
+      const message = extractErrorMessage(
+        error,
+        'Incorrect username or password'
+      );
       toast.error(`Error signing in: ${message}`);
+      return Promise.reject(error);
     },
   });
 };
@@ -41,7 +37,7 @@ export const useSignInMutation = (navigate: (path: string) => void) => {
 export const useSignUpMutation = () => {
   return useMutation({
     mutationFn: signUpUser,
-    onSuccess: (data) => {
+    onSuccess: (data: ISignUpResponse) => {
       sendVerificationEmail(data.user.email, data.token, data.user.userName)
         .then(() => {
           toast.success(
@@ -56,26 +52,31 @@ export const useSignUpMutation = () => {
           );
         });
     },
-    onError: (error: any) => {
-      const message =
-        error.response?.data?.message ||
-        'Uncorrect username, email or password';
+    onError: (error: AxiosError<any>) => {
+      const message = extractErrorMessage(
+        error,
+        'Incorrect data provided during sign up'
+      );
       toast.error(`Error signing up: ${message}`);
+      return Promise.reject(error);
     },
   });
 };
 
-export const useSignOutMutation = (navigate: (path: string) => void) => {
+export const useSignOutMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: signOutUser,
     onSuccess: () => {
-      toast.success('You have successfully signed out.');
       localStorage.removeItem('accessToken');
-      navigate('/');
+      queryClient.clear();
+      toast.success('You have successfully signed out.');
     },
-    onError: (error: any) => {
-      console.error('Sign out error:', error);
-      toast.error('Failed to sign out. Please try again.');
+    onError: (error: AxiosError<any>) => {
+      localStorage.removeItem('accessToken');
+      queryClient.clear();
+      toast.error('Failed to sign out. Local session cleared.');
+      return Promise.reject(error);
     },
   });
 };
@@ -85,10 +86,7 @@ export const useVerifyMutation = () => {
     mutationFn: verifyEmail,
     onError: (error: any) => {
       console.error('Verification error:', error);
-      return {
-        message:
-          error.response?.data?.message || 'Link is invalid or has expired.',
-      };
+      return Promise.reject(error);
     },
   });
 };

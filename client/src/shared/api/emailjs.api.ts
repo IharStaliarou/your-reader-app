@@ -1,29 +1,21 @@
 import emailjs from '@emailjs/browser';
 
-import { CLIENT_URL } from '@constants/url.constants';
+import { VERIFY_TOKEN_URL } from '@/shared/constants/api.constants';
+import { EMAILJS_CONFIG } from '../utils/emailjs.utils';
 
-// TODO: add env config
-const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+const { EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY } =
+  EMAILJS_CONFIG;
 
 export const sendVerificationEmail = async (
   toEmail: string,
   verificationToken: string,
   username: string
 ) => {
-  if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
-    console.error(
-      'EmailJS credentials are not configured in VITE environment variables.'
-    );
-    throw new Error('Email service is unavailable.');
-  }
-
   const templateParams = {
     to_email: toEmail,
     to_name: username,
     verification_token: verificationToken,
-    verification_url: `${CLIENT_URL}/verify?token=${verificationToken}`,
+    verification_url: VERIFY_TOKEN_URL(verificationToken),
     app_name: 'YOUR READER',
   };
 

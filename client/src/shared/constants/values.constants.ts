@@ -1,1 +1,0 @@
-export const FIVE_MINUTES_EXPIRATION = 1000 * 60 * 5;

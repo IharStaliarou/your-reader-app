@@ -1,3 +1,6 @@
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 import { setOnSignOutCallback } from '@/shared/api/instance.api';
 import {
   useCallback,
@@ -7,9 +10,6 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-import { toast } from 'react-toastify';
 import { AuthContext } from '../contexts/AuthContext';
 
 interface IAuthProviderProps {

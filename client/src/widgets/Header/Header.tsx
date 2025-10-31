@@ -1,9 +1,9 @@
-import { Button, AppBar, Toolbar, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { Button, AppBar, Toolbar, Box } from '@mui/material';
 
-import { Logo } from '@shared/ui/Logo';
-import { useSignOutMutation } from '@/features/auth/api/auth.api';
 import { useAuth } from '@/app/providers/AuthProvider';
+import { useSignOutMutation } from '@/features/auth/api/auth.api';
+import { Logo } from '@shared/ui/Logo';
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ export const Header = () => {
   const { isSignedIn, signOut } = useAuth();
 
   // TODO: fix - hidden SignOut btn after sign out
-  const signOutMutation = useSignOutMutation(navigate);
+  const signOutMutation = useSignOutMutation();
 
   const handleNavigate = (path: string) => {
     navigate(path);

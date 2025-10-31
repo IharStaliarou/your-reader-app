@@ -1,12 +1,9 @@
-import { User } from '@prisma/client';
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
-interface VerificationPayload {
-  userId: string;
-  email: string;
-}
+import { User } from '@prisma/client';
+import { IVerificationPayload } from './interfaces/verification.interface';
 
 @Injectable()
 export class VerificationTokenService {
@@ -26,7 +23,7 @@ export class VerificationTokenService {
       throw new Error('Verification secret not set');
     }
 
-    const payload: VerificationPayload = {
+    const payload: IVerificationPayload = {
       userId: user.id,
       email: user.email,
     };
@@ -37,9 +34,9 @@ export class VerificationTokenService {
     });
   }
 
-  verifyVerificationToken(token: string): VerificationPayload {
+  verifyVerificationToken(token: string): IVerificationPayload {
     try {
-      return this.jwtService.verify<VerificationPayload>(token, {
+      return this.jwtService.verify<IVerificationPayload>(token, {
         secret: this.secret,
       });
     } catch (error) {

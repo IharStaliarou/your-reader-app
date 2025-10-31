@@ -44,10 +44,10 @@
         "src/auth/*"
       ],
       "@config": [
-        "config"
+        "src/config"
       ],
       "@config/*": [
-        "config/*"
+        "src/config/*"
       ],
       "@user": [
         "src/user"
@@ -56,10 +56,10 @@
         "src/user/*"
       ],
       "@decorators": [
-        "decorators"
+        "src/decorators"
       ],
       "@decorators/*": [
-        "decorators/*"
+        "src/decorators/*"
       ],
       "@validators": [
         "validators"

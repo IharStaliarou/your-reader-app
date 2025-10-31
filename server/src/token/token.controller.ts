@@ -3,7 +3,7 @@ import type { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 
 import { Public } from '@auth/guards/jwt.auth.guard';
-import { Cookies } from '@decorators/cookies.decorator';
+import { Cookies } from 'src/decorators/cookies.decorator';
 import { TokenService } from './token.service';
 
 const { REFRESH_TOKEN } = process.env;

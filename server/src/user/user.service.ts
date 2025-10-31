@@ -6,11 +6,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { genSaltSync, hashSync } from 'bcryptjs';
-import { User } from '@prisma/client';
 
+import { User } from '@prisma/client';
+import { PrismaService } from '@prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService } from '@prisma/prisma.service';
 
 @Injectable()
 export class UserService {
@@ -18,31 +18,10 @@ export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
+    await this.checkUniqueness(createUserDto);
+
     const hashedPassword = this.hashPassword(createUserDto.password);
     const userData = { ...createUserDto, password: hashedPassword };
-
-    const existingUserByUsername = await this.findByUsername(
-      createUserDto.userName,
-    );
-    if (existingUserByUsername) {
-      const message = 'User with this username already exists';
-      this.logger.error(message);
-      throw new ConflictException(message);
-    }
-
-    const existingUserByEmail = await this.findByEmail(createUserDto.email);
-    if (existingUserByEmail) {
-      const message = 'User with this email already exists';
-      this.logger.error(message);
-      throw new ConflictException(message);
-    }
-
-    const existingUserByPhone = await this.findByPhone(createUserDto.phone);
-    if (existingUserByPhone) {
-      const message = 'User with this phone already exists';
-      this.logger.error(message);
-      throw new ConflictException(message);
-    }
 
     const newUser = await this.prismaService.user
       .create({
@@ -161,6 +140,35 @@ export class UserService {
       where: { id: userId },
       data: { isVerified: isVerified },
     });
+  }
+
+  private async checkUniqueness(createUserDto: CreateUserDto): Promise<void> {
+    const checks = [
+      {
+        field: 'userName',
+        value: createUserDto.userName,
+        finder: this.findByUsername.bind(this),
+      },
+      {
+        field: 'email',
+        value: createUserDto.email,
+        finder: this.findByEmail.bind(this),
+      },
+      {
+        field: 'phone',
+        value: createUserDto.phone,
+        finder: this.findByPhone.bind(this),
+      },
+    ];
+
+    for (const check of checks) {
+      const existingUser = await check.finder(check.value);
+      if (existingUser) {
+        const message = `User with this ${check.field} already exists`;
+        this.logger.error(message);
+        throw new ConflictException(message);
+      }
+    }
   }
 
   private hashPassword(password: string) {

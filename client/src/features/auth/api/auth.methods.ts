@@ -4,19 +4,12 @@ import {
   API_SIGN_OUT_URL,
   API_SIGN_UP_URL,
   API_VERIFY_URL,
-} from '@constants/url.constants';
-import { type ISignInData, type ICreateUserData } from '../lib/validation';
-
-// TODO: rebase to interfaces file
-export interface IAuthResponse {
-  accessToken: string;
-  refreshToken: string;
-}
-
-interface ISignUpResponse {
-  user: { email: string; userName: string };
-  token: string;
-}
+} from '@/shared/constants/api.constants';
+import type { ISignInData, ICreateUserData } from '../lib/validation';
+import type {
+  IAuthResponse,
+  ISignUpResponse,
+} from '@/shared/interfaces/auth.interface';
 
 export const signInUser = async (data: ISignInData): Promise<IAuthResponse> => {
   const response = await $api.post(`${API_BASE_URL}/auth/signin`, data);

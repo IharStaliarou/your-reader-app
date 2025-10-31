@@ -51,4 +51,15 @@ export class FileService {
       },
     });
   }
+
+  async getAllByUserId(userId: string): Promise<File[]> {
+    return this.prisma.file.findMany({
+      where: {
+        userId: userId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
 }

@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Box, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { Box, Button } from '@mui/material';
 
-import { Header } from '@widgets/Header';
+import { Header } from '@/widgets/Header/Header';
 import { TypewriterText } from '@shared/ui/TypewriterText';
 
 const LandingPage = () => {

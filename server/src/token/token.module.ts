@@ -6,7 +6,7 @@ import { TokenService } from './token.service';
 import { TokenController } from './token.controller';
 import { PrismaService } from '@prisma/prisma.service';
 import { UserModule } from '@user/user.module';
-import { jwtModuleAsyncOptions } from '@config/jwt.module.config';
+import { jwtModuleAsyncOptions } from 'src/config/jwt.module.config';
 
 @Module({
   controllers: [TokenController],

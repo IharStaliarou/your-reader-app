@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { FIVE_MINUTES_EXPIRATION } from '@/shared/constants/values.constants';
+import { FIVE_MINUTES_EXPIRATION } from '@/shared/constants/time.constants';
 
 interface IQueryProviderProps {
   children: ReactNode;

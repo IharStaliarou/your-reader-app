@@ -1,10 +1,26 @@
-import axios from 'axios';
-import { API_BASE_URL, API_REFRESH_TOKENS_URL } from '@constants/url.constants';
+import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
+import {
+  API_BASE_URL,
+  API_REFRESH_TOKENS_URL,
+} from '@/shared/constants/api.constants';
 
-let onLogoutCallback: (() => void) | null = null;
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _isRetry?: boolean;
+}
+
+let onSignOutCallback: (() => void) | null = null;
 
 export const setOnSignOutCallback = (callback: () => void) => {
-  onLogoutCallback = callback;
+  onSignOutCallback = callback;
+};
+
+const signOutCleanup = () => {
+  localStorage.removeItem('accessToken');
+  if (onSignOutCallback) {
+    onSignOutCallback();
+  } else {
+    window.location.href = '/';
+  }
 };
 
 export const $api = axios.create({
@@ -22,23 +38,17 @@ $api.interceptors.request.use((config) => {
 
 $api.interceptors.response.use(
   (config) => config,
-  async (error) => {
-    const originalRequest = error.config;
-    if (error.config.url === API_REFRESH_TOKENS_URL) {
-      console.error('Refresh token itself failed. Initiating full signout.');
-      if (onLogoutCallback) {
-        onLogoutCallback();
-      } else {
-        window.location.href = '/';
-      }
-      return Promise.reject(error);
-    }
+  async (error: AxiosError) => {
+    const originalRequest = error.config as CustomAxiosRequestConfig;
     if (
+      error.response &&
       error.response.status === 401 &&
       originalRequest &&
+      originalRequest.url !== API_REFRESH_TOKENS_URL &&
       !originalRequest._isRetry
     ) {
       originalRequest._isRetry = true;
+
       try {
         const response = await $api.get(`${API_REFRESH_TOKENS_URL}`);
         const newAccessToken = response.data.accessToken;
@@ -50,9 +60,15 @@ $api.interceptors.response.use(
         return $api.request(originalRequest);
       } catch (refreshError) {
         console.error('Refresh token failed: Session expired', refreshError);
-
+        signOutCleanup();
         return Promise.reject(refreshError);
       }
+    }
+    if (
+      error.config?.url === API_REFRESH_TOKENS_URL &&
+      error.response?.status === 401
+    ) {
+      signOutCleanup();
     }
 
     return Promise.reject(error);

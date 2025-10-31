@@ -1,4 +1,4 @@
-import { ICookieOptions } from '@token/interfaces/interfaces';
+import { ICookieOptions } from '@token/interfaces/cookies.interface';
 
 export const getCookieOptions = (expires: Date): ICookieOptions => {
   return {

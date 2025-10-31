@@ -1,80 +1,90 @@
-import React, { useState, useCallback } from 'react';
-import { Button, Box, Typography, Input } from '@mui/material';
+import { useState, useCallback, useRef } from 'react';
+import { Button, Box, CircularProgress, Typography } from '@mui/material';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { toast } from 'react-toastify';
 
 import { useUploadFileMutation } from '../api/file.api';
+import { isAllowedFileType } from '@/shared/utils/file.utils';
+import { UploadStatus } from './UploadStatus';
 
 export const FileUploadForm = () => {
-  const [file, setFile] = useState<File | null>(null);
-  const { mutate, isPending } = useUploadFileMutation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const {
+    mutate: uploadMutate,
+    isPending,
+    isSuccess,
+    isError,
+    error,
+    reset,
+  } = useUploadFileMutation();
 
-  const handleFileChange = useCallback(
+  const handleFileSelect = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      if (event.target.files && event.target.files.length > 0) {
-        setFile(event.target.files[0]);
+      reset();
+      const file = event.target.files?.[0];
+      if (!file) {
+        setSelectedFile(null);
+        return;
       }
-    },
-    []
-  );
-
-  const handleSubmit = useCallback(
-    (event: React.FormEvent) => {
-      event.preventDefault();
-
-      if (file) {
-        mutate({ file });
+      if (isAllowedFileType(file)) {
+        setSelectedFile(file);
       } else {
-        toast.warn('Please select a file to upload.');
+        setSelectedFile(null);
+        toast.error('Invalid file type. Please select a PDF or TXT file.');
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
       }
     },
-    [file, mutate]
+    [reset]
   );
+
+  const handleUpload = () => {
+    if (isError) reset();
+    if (selectedFile) {
+      uploadMutate({ file: selectedFile });
+    }
+  };
 
   return (
-    <Box
-      component='form'
-      onSubmit={handleSubmit}
-      className='flex flex-col gap-6 p-8 bg-white shadow-xl rounded-lg w-full max-w-lg'
-    >
-      <Typography
-        variant='h5'
-        component='h2'
-        className='text-center font-bold text-gray-800'
-      >
-        Upload Document
+    <Box className='p-6 border rounded-lg shadow-md max-w-md mx-auto'>
+      <Typography variant='h6' gutterBottom>
+        Upload Document (PDF or TXT)
       </Typography>
 
-      <label htmlFor='file-upload' className='cursor-pointer w-full'>
-        <Box className='border-2 border-dashed border-indigo-300 rounded-lg p-10 flex flex-col items-center justify-center transition-colors hover:border-indigo-500'>
-          <UploadFileIcon className='text-indigo-500 text-5xl mb-2' />
-          <Typography variant='body1' className='text-gray-600'>
-            {file ? file.name : 'Choose a PDF or TXT file'}
-          </Typography>
-          <Typography variant='caption' className='text-gray-400'>
-            Max size 5MB
-          </Typography>
-        </Box>
-      </label>
-
-      <Input
+      <input
         type='file'
-        id='file-upload'
-        inputProps={{ accept: '.pdf,.txt' }}
+        ref={fileInputRef}
         style={{ display: 'none' }}
-        onChange={handleFileChange}
+        onChange={handleFileSelect}
+        accept='.pdf,.txt'
       />
-
       <Button
-        type='submit'
+        variant='outlined'
+        startIcon={<UploadFileIcon />}
+        fullWidth
+        onClick={() => fileInputRef.current?.click()}
+        className='mb-4'
+      >
+        {selectedFile ? selectedFile.name : 'Select File'}
+      </Button>
+      <Button
         variant='contained'
         color='primary'
         fullWidth
-        disabled={isPending || !file}
-        className='py-3 bg-indigo-600 hover:bg-indigo-700'
+        onClick={handleUpload}
+        disabled={!selectedFile || isPending}
       >
-        {isPending ? 'Uploading...' : 'Upload File'}
+        {isPending ? <CircularProgress size={24} color='inherit' /> : 'Upload'}
       </Button>
+
+      <UploadStatus
+        isSuccess={isSuccess}
+        isError={isError}
+        error={error}
+        fileName={selectedFile?.name || null}
+      />
     </Box>
   );
 };
