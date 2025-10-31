@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Typography, type TypographyProps } from '@mui/material';
 
-interface TypewriterTextProps extends TypographyProps {
+interface ITypewriterTextProps extends TypographyProps {
   text: string;
   delay?: number;
   initialDelay?: number;
@@ -14,7 +14,7 @@ export const TypewriterText = ({
   initialDelay = 0,
   onAnimationEnd,
   ...typographyProps
-}: TypewriterTextProps) => {
+}: ITypewriterTextProps) => {
   const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
 

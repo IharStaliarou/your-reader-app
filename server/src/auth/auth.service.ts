@@ -1,12 +1,12 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
-import { Prisma, User } from '@prisma/client';
 import { compareSync } from 'bcryptjs';
 
+import { Prisma, User } from '@prisma/client';
 import { PrismaService } from '@prisma/prisma.service';
 import { UserService } from '@user/user.service';
-import { SignInDto } from './dto/sign-in.dto';
 import { TokenService } from '@token/token.service';
-import { ITokens } from '@token/interfaces/interfaces';
+import { ITokens } from '@token/interfaces/tokens.interface';
+import { SignInDto } from './dto/sign-in.dto';
 import { VerificationTokenService } from './verification-token.service';
 import { SignUpUserDto } from './dto/sign-up.dto';
 

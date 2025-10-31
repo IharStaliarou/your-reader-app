@@ -1,0 +1,2 @@
+export const FIVE_MINUTES_MS = 1000 * 60 * 5;
+export const FIVE_MINUTES_EXPIRATION = FIVE_MINUTES_MS;

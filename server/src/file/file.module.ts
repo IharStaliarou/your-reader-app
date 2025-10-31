@@ -1,31 +1,21 @@
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import * as path from 'path';
 
 import { PrismaModule } from '@prisma/prisma.module';
 import { FileController } from './file.controller';
 import { FileService } from './file.service';
-
-// TODO: create utils
-const fileStorage = diskStorage({
-  destination: './uploads',
-  filename: (req, file, callback) => {
-    const userId = req.user.id || 'unknown';
-    const ext = path.extname(file.originalname);
-    const name = path.basename(file.originalname, ext);
-
-    const newFileName = `${name}_${userId}_${Date.now()}${ext}`;
-
-    callback(null, newFileName);
-  },
-});
+import { UPLOAD_DESTINATION } from 'src/constants/file.constants';
+import { getFileNameGenerator } from '@utils/file.util';
 
 @Module({
   imports: [
     PrismaModule,
     MulterModule.register({
-      storage: fileStorage,
+      storage: diskStorage({
+        destination: UPLOAD_DESTINATION,
+        filename: getFileNameGenerator,
+      }),
     }),
   ],
   controllers: [FileController],

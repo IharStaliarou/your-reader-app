@@ -1,10 +1,10 @@
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TextField, Button, Box } from '@mui/material';
 
 import { SignInSchema, type ISignInData } from '../lib/validation';
 import { useSignInMutation } from '../api/auth.api';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/app/providers/AuthProvider';
 
 export const SignInForm = () => {
@@ -12,7 +12,7 @@ export const SignInForm = () => {
 
   const { signIn } = useAuth();
 
-  const { mutate: signInMutate, isPending } = useSignInMutation(navigate);
+  const { mutate: signInMutate, isPending } = useSignInMutation();
 
   const {
     register,

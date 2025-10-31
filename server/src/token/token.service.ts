@@ -1,14 +1,14 @@
 import { Response } from 'express';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import dayjs from 'dayjs';
-import { v4 } from 'uuid';
 import { Token, User } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import dayjs from 'dayjs';
+import { v4 } from 'uuid';
 
 import { PrismaService } from '@prisma/prisma.service';
 import { UserService } from '@user/user.service';
-import { ITokens } from './interfaces/interfaces';
+import { ITokens } from './interfaces/tokens.interface';
 import { getCookieOptions } from '@utils/cookie-options.util';
 
 @Injectable()

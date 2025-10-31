@@ -17,7 +17,7 @@ import { SignUpUserDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import { Public } from './guards/jwt.auth.guard';
 import { TokenService } from '@token/token.service';
-import { Cookies } from '@decorators/cookies.decorator';
+import { Cookies } from 'src/decorators/cookies.decorator';
 import { getCookieOptions } from '@utils/cookie-options.util';
 import { VerificationTokenService } from './verification-token.service';
 import { VerificationDto } from './dto/verification.dto';

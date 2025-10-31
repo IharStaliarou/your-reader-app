@@ -1,13 +1,15 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
-import { useVerifyMutation } from '@/features/auth/api/auth.api';
 
-const VerificationPage: React.FC = () => {
+import { useVerifyMutation } from '@/features/auth/api/auth.api';
+import { type IVerifyResponse } from '@/shared/interfaces/auth.interface';
+
+const VerificationPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { mutate, isPending, isSuccess, data, isError, error } =
-    useVerifyMutation();
+    useVerifyMutation<IVerifyResponse>();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -52,8 +54,9 @@ const VerificationPage: React.FC = () => {
     }
 
     if (isError) {
+      const apiError = error as any;
       const errorMessage =
-        (error as any)?.response?.data?.message ||
+        apiError?.response?.data?.message ||
         'Invalid or expired link. Please try again.';
       return (
         <>
