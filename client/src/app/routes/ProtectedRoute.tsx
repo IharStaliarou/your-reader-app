@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
-import { useAuth } from '@/app/providers/AuthProvider';
+import { useAuthStore } from '@/features/auth/store/auth.store';
 
 interface IProtectedRouteProps {
   redirectPath?: string;
@@ -9,8 +9,7 @@ interface IProtectedRouteProps {
 export const ProtectedRoute = ({
   redirectPath = '/auth',
 }: IProtectedRouteProps) => {
-  const { isSignedIn } = useAuth();
-
+  const isSignedIn = useAuthStore((state) => state.isSignedIn);
   if (!isSignedIn) {
     return <Navigate to={redirectPath} replace />;
   }

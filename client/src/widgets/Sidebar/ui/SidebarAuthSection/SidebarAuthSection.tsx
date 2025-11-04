@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   List,
@@ -12,14 +11,19 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-import { useAuth } from '@/features/auth/hooks/useAuth';
+import { useSignOutMutation } from '@/features/auth/api/auth.api';
+import { useAuthStore } from '@/features/auth/store/auth.store';
 
-export const SidebarAuthSection: React.FC = () => {
-  const { isAuthenticated, signOut, isSigningOut } = useAuth();
+export const SidebarAuthSection = () => {
+  const isSignedIn = useAuthStore((state) => state.isSignedIn);
+  const isSigningOut = useAuthStore((state) => state.isSigningOut);
+
+  const { mutate: signOut } = useSignOutMutation();
+
   const location = useLocation();
 
-  const authLink = isAuthenticated ? '/profile' : '/login';
-  const authLabel = isAuthenticated ? 'Profile' : 'Sign In';
+  const authLink = isSignedIn ? '/profile' : '/auth';
+  const authLabel = isSignedIn ? 'Profile' : 'Sign In';
   const isSelected = location.pathname === authLink;
 
   return (
@@ -28,7 +32,7 @@ export const SidebarAuthSection: React.FC = () => {
         <NavLink to={authLink} className='w-full'>
           <ListItemButton selected={isSelected}>
             <ListItemIcon sx={{ minWidth: 40 }}>
-              {isAuthenticated ? (
+              {isSignedIn ? (
                 <AccountCircleIcon color='success' />
               ) : (
                 <LoginIcon />
@@ -39,7 +43,7 @@ export const SidebarAuthSection: React.FC = () => {
         </NavLink>
       </li>
 
-      {isAuthenticated && (
+      {isSignedIn && (
         <div className='pt-4 border-t'>
           <Button
             fullWidth
@@ -52,11 +56,11 @@ export const SidebarAuthSection: React.FC = () => {
                 <LogoutIcon />
               )
             }
-            onClick={signOut}
+            onClick={() => signOut()}
             disabled={isSigningOut}
             sx={{ mt: 1, justifyContent: 'flex-start', pl: 1.5 }}
           >
-            Sign Out
+            {isSigningOut ? 'Signing out...' : 'Sign Out'}
           </Button>
         </div>
       )}

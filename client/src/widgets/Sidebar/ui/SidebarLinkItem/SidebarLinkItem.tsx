@@ -1,5 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+
 import type { ISidebarLink } from '../../config/sidebar.config';
 
 interface ISidebarLinkItemProps {

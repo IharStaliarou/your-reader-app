@@ -1,26 +1,25 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
+
 import {
   API_BASE_URL,
   API_REFRESH_TOKENS_URL,
 } from '@/shared/constants/api.constants';
+import { signOutCleanupGlobal } from '@/features/auth/store/auth.store';
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   _isRetry?: boolean;
 }
 
-let onSignOutCallback: (() => void) | null = null;
+let isRefreshing = false;
+const refreshSubscribers: ((accessToken: string) => void)[] = [];
 
-export const setOnSignOutCallback = (callback: () => void) => {
-  onSignOutCallback = callback;
+const subscribeTokenRefresh = (callback: (accessToken: string) => void) => {
+  refreshSubscribers.push(callback);
 };
 
-const signOutCleanup = () => {
-  localStorage.removeItem('accessToken');
-  if (onSignOutCallback) {
-    onSignOutCallback();
-  } else {
-    window.location.href = '/';
-  }
+const onRefreshed = (accessToken: string) => {
+  refreshSubscribers.forEach((callback) => callback(accessToken));
+  refreshSubscribers.length = 0;
 };
 
 export const $api = axios.create({
@@ -40,35 +39,48 @@ $api.interceptors.response.use(
   (config) => config,
   async (error: AxiosError) => {
     const originalRequest = error.config as CustomAxiosRequestConfig;
+    const isRefreshEndpoint = originalRequest.url === API_REFRESH_TOKENS_URL;
+
     if (
       error.response &&
       error.response.status === 401 &&
-      originalRequest &&
-      originalRequest.url !== API_REFRESH_TOKENS_URL &&
+      !isRefreshEndpoint &&
       !originalRequest._isRetry
     ) {
       originalRequest._isRetry = true;
 
-      try {
-        const response = await $api.get(`${API_REFRESH_TOKENS_URL}`);
-        const newAccessToken = response.data.accessToken;
+      if (!isRefreshing) {
+        isRefreshing = true;
+        try {
+          const response = await $api.get(`${API_REFRESH_TOKENS_URL}`);
+          const newAccessToken = response.data.accessToken;
 
-        localStorage.setItem('accessToken', newAccessToken);
+          localStorage.setItem('accessToken', newAccessToken);
 
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          onRefreshed(newAccessToken);
 
-        return $api.request(originalRequest);
-      } catch (refreshError) {
-        console.error('Refresh token failed: Session expired', refreshError);
-        signOutCleanup();
-        return Promise.reject(refreshError);
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+          return $api.request(originalRequest);
+        } catch (refreshError) {
+          console.error('Refresh token failed: Session expired', refreshError);
+          signOutCleanupGlobal();
+          return Promise.reject(refreshError);
+        } finally {
+          isRefreshing = false;
+        }
       }
+
+      return new Promise((resolve) => {
+        subscribeTokenRefresh((accessToken) => {
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+          resolve($api.request(originalRequest));
+        });
+      });
     }
-    if (
-      error.config?.url === API_REFRESH_TOKENS_URL &&
-      error.response?.status === 401
-    ) {
-      signOutCleanup();
+
+    if (isRefreshEndpoint && error.response?.status === 401) {
+      signOutCleanupGlobal();
     }
 
     return Promise.reject(error);
