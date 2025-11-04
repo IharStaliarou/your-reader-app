@@ -1,17 +1,13 @@
-import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TextField, Button, Box } from '@mui/material';
 
 import { SignInSchema, type ISignInData } from '../lib/validation';
 import { useSignInMutation } from '../api/auth.api';
-import { useAuth } from '@/app/providers/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 export const SignInForm = () => {
   const navigate = useNavigate();
-
-  const { signIn } = useAuth();
-
   const { mutate: signInMutate, isPending } = useSignInMutation();
 
   const {
@@ -25,7 +21,7 @@ export const SignInForm = () => {
   const handleFormSubmit = (data: ISignInData) => {
     signInMutate(data, {
       onSuccess: () => {
-        signIn();
+        navigate('/profile');
       },
     });
   };

@@ -2,16 +2,13 @@ import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 
 import { QueryProvider } from './providers/QueryProvider';
-import { AuthProvider } from './providers/AuthProvider';
 import { AppRoutes } from './routes/AppRoutes';
 
 function App() {
   return (
     <BrowserRouter>
       <QueryProvider>
-        <AuthProvider>
-          <AppRoutes />
-        </AuthProvider>
+        <AppRoutes />
       </QueryProvider>
       <ToastContainer
         position='top-right'

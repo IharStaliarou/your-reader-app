@@ -1,12 +1,12 @@
-import { Paper, List, Typography } from '@mui/material';
-import { useAuth } from '@/features/auth/hooks/useAuth';
+import { Paper, List, Typography, Box } from '@mui/material';
+
 import { SidebarLinkItem } from './ui/SidebarLinkItem/SidebarLinkItem';
 import { SidebarAuthSection } from './ui/SidebarAuthSection/SidebarAuthSection';
 import { protectedLinks, publicLinks } from './config/sidebar.config';
+import { useAuthStore } from '@/features/auth/store/auth.store';
 
 export const Sidebar = () => {
-  const { isAuthenticated } = useAuth();
-
+  const isAuthenticated = useAuthStore((state) => state.isSignedIn);
   const visibleLinks = [
     ...publicLinks,
     ...(isAuthenticated ? protectedLinks : []),
@@ -24,7 +24,7 @@ export const Sidebar = () => {
         justifyContent: 'space-between',
       }}
     >
-      <div>
+      <Box>
         <Typography
           variant='h5'
           color='primary'
@@ -37,7 +37,7 @@ export const Sidebar = () => {
             <SidebarLinkItem key={link.to} link={link} />
           ))}
         </List>
-      </div>
+      </Box>
       <SidebarAuthSection />
     </Paper>
   );

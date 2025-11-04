@@ -1,6 +1,7 @@
 import { type AxiosError } from 'axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 import { sendVerificationEmail } from '@api/emailjs.api';
 import {
@@ -14,12 +15,16 @@ import type {
   ISignUpResponse,
 } from '@shared/interfaces/auth.interface';
 import { extractErrorMessage } from '@/shared/utils/error.utils';
+import { useAuthStore } from '../store/auth.store';
 
 export const useSignInMutation = () => {
+  const setIsSignedIn = useAuthStore((state) => state.setIsSignedIn);
+
   return useMutation({
     mutationFn: signInUser,
     onSuccess: (data: IAuthResponse) => {
       localStorage.setItem('accessToken', data.accessToken);
+      setIsSignedIn(true);
       toast.success('You have successfully signed in.');
       return data;
     },
@@ -65,17 +70,40 @@ export const useSignUpMutation = () => {
 
 export const useSignOutMutation = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
   return useMutation({
-    mutationFn: signOutUser,
+    mutationFn: async () => {
+      useAuthStore.getState().startSignOut();
+      try {
+        return await signOutUser();
+      } catch (error) {
+        console.error(
+          'Sign Out failed on server side, proceeding with local cleanup.',
+          error
+        );
+        throw error;
+      }
+    },
     onSuccess: () => {
+      const { setIsSignedIn, finishSignOut } = useAuthStore.getState();
+
       localStorage.removeItem('accessToken');
+      setIsSignedIn(false);
+      finishSignOut();
       queryClient.clear();
       toast.success('You have successfully signed out.');
+      navigate('/');
     },
     onError: (error: AxiosError<any>) => {
+      const { setIsSignedIn, finishSignOut } = useAuthStore.getState();
+
       localStorage.removeItem('accessToken');
+      setIsSignedIn(false);
+      finishSignOut();
       queryClient.clear();
       toast.error('Failed to sign out. Local session cleared.');
+      navigate('/');
       return Promise.reject(error);
     },
   });
