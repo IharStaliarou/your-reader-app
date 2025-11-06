@@ -50,9 +50,6 @@ export class AuthService {
       throw new UnauthorizedException(errorMessage);
     }
 
-    this.logger.log(`Password from DTO: ${password}`);
-    this.logger.log(`Hash from DB: ${user.password}`);
-
     const isPasswordMatch = compareSync(password, user?.password.trim());
 
     if (!isPasswordMatch) {
