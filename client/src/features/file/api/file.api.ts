@@ -7,6 +7,7 @@ import {
   API_GET_FILES_URL,
   MULTER_FIELD_NAME,
   API_GET_FILE_CONTENT_URL,
+  API_DELETE_FILE_URL,
 } from '@/shared/constants/api.constants';
 import { $api } from '@/shared/api/instance.api';
 import { FIVE_MINUTES_MS } from '@/shared/constants/time.constants';
@@ -36,6 +37,13 @@ const uploadFile = async ({
         'Content-Type': 'multipart/form-data',
       },
     }
+  );
+  return response.data;
+};
+
+const deleteFile = async (fileId: string): Promise<{ message: string }> => {
+  const response = await $api.delete<{ message: string }>(
+    API_DELETE_FILE_URL(fileId)
   );
   return response.data;
 };
@@ -93,5 +101,25 @@ export const useGetFileContentQuery = (fileId: string | null) => {
     enabled: enabled,
     staleTime: Infinity,
     retry: 1,
+  });
+};
+
+export const useDeleteFileMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteFile,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: fileQueryKeys.files });
+
+      toast.success(data.message || `File successfully deleted!`);
+
+      // TODO: add work with store for correct file deletion in real time and use activeFileId in future
+    },
+    onError: (error: AxiosError<any>) => {
+      const message = extractErrorMessage(error, 'Error deleting file');
+      toast.error(`Deletion Error: ${message}`);
+      return Promise.reject(error);
+    },
   });
 };

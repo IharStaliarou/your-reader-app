@@ -2,20 +2,16 @@ import { AxiosError } from 'axios';
 import { CircularProgress, Typography, Grid, Box, Alert } from '@mui/material';
 
 import { FileCard } from './FileCard';
-import { useGetUserFilesQuery } from '../api/file.api';
-
-// TODO: add useDeleteFileMutation
-const useDeleteFileMutation = () => {
-  return { mutate: (id: string) => console.log(`Deleting file: ${id}`) };
-};
+import { useDeleteFileMutation, useGetUserFilesQuery } from '../api/file.api';
 
 export const FilesList = () => {
-  const { data, isLoading, isError, error } = useGetUserFilesQuery();
-  const deleteMutation = useDeleteFileMutation();
+  const { data: filesData, isLoading, isError, error } = useGetUserFilesQuery();
+  const { mutate: deleteFile } = useDeleteFileMutation();
 
   const handleDelete = (fileId: string) => {
-    deleteMutation.mutate(fileId);
+    deleteFile(fileId);
   };
+
   if (isLoading) {
     return (
       <Box
@@ -35,7 +31,7 @@ export const FilesList = () => {
     return <Alert severity='error'>Failed to load files: {errorMessage}</Alert>;
   }
 
-  const files = data?.files || [];
+  const files = filesData?.files || [];
 
   if (files.length === 0) {
     return (
@@ -58,7 +54,7 @@ export const FilesList = () => {
       </Typography>
 
       <Grid container spacing={3}>
-        {files.map((file) => (
+        {filesData?.files.map((file) => (
           <FileCard key={file.id} file={file} onDelete={handleDelete} />
         ))}
       </Grid>

@@ -20,6 +20,8 @@ export const API_GET_FILES_URL = `${API_FILES_URL}/all`;
 export const API_GET_FILE_CONTENT_URL = (fileId: string) =>
   `${API_FILES_URL}/${fileId}/content`;
 export const API_UPLOAD_FILE_URL = `${API_FILES_URL}/upload`;
+export const API_DELETE_FILE_URL = (fileId: string) =>
+  `${API_FILES_URL}/${fileId}`;
 
 /* other */
 export const MULTER_FIELD_NAME = 'file';

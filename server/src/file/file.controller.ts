@@ -11,6 +11,7 @@ import {
   NotFoundException,
   Param,
   Res,
+  Delete,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { type Request, type Response } from 'express';
@@ -26,6 +27,7 @@ import {
   MAX_FILE_SIZE_BYTES,
   MULTER_FIELD_NAME,
 } from 'src/constants/file.constants';
+import { CurrentUser } from '@decorators/current-user.decorator';
 
 interface AuthenticatedRequest extends Request {
   user: User;
@@ -124,5 +126,13 @@ export class FileController {
         `Physical file not found at path: ${fileMetadata.filePath}`,
       );
     }
+  }
+
+  @Delete(':fileId')
+  async deleteFile(
+    @Param('fileId') fileId: string,
+    @CurrentUser('id') userId: string,
+  ) {
+    return this.fileService.removeFile(fileId, userId);
   }
 }

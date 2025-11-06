@@ -6,63 +6,55 @@ import {
   Patch,
   Param,
   Delete,
+  ForbiddenException,
 } from '@nestjs/common';
 
-import { User } from '@prisma/client';
+import { type User } from '@prisma/client';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Public } from '@auth/guards/jwt.auth.guard';
+import { CurrentUser } from 'src/decorators/current-user.decorator';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Public()
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
-  @Get('find-all')
-  findAll() {
-    return this.userService.findAll();
-  }
-
-  @Get('find-by-id/:id')
-  async findById(@Param('id') id: string) {
-    return this.userService.findById(id);
-  }
-
-  @Get('find-by-username/:userName')
-  async findByUsername(@Param('userName') userName: string) {
-    const user: User = await this.userService.findByUsername(userName);
-    const userWithoutPassword = { ...user };
-    delete userWithoutPassword.password;
-    return userWithoutPassword;
-  }
-
-  @Get('find-by-email/:email')
-  async findByEmail(@Param('email') email: string) {
-    const user: User = await this.userService.findByEmail(email);
-    const userWithoutPassword = { ...user };
-    delete userWithoutPassword.password;
-    return userWithoutPassword;
-  }
-
-  @Get('find-by-phone/:phone')
-  async findByPhone(@Param('phone') phone: string) {
-    const user: User = await this.userService.findByPhone(phone);
+  @Get('profile')
+  async getProfile(@CurrentUser() user: User) {
     const userWithoutPassword = { ...user };
     delete userWithoutPassword.password;
     return userWithoutPassword;
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @CurrentUser('id') currentUserId: string,
+  ) {
+    if (id !== currentUserId) {
+      throw new ForbiddenException('You can only update your own profile.');
+    }
+    // TODO: add ForbiddenException check (import and throw error)
     return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(
+    @Param('id') id: string,
+    @CurrentUser('id') currentUserId: string,
+  ) {
+    if (id !== currentUserId) {
+      throw new ForbiddenException('You can only delete your own profile.');
+    }
+    // TODO: add ForbiddenException check (import and throw error)
     return this.userService.remove(id);
   }
 }
