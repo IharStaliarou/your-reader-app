@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, type ChangeEvent } from 'react';
 import { Button, Box, CircularProgress, Typography } from '@mui/material';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { toast } from 'react-toastify';
@@ -20,7 +20,7 @@ export const FileUploadForm = () => {
   } = useUploadFileMutation();
 
   const handleFileSelect = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       reset();
       const file = event.target.files?.[0];
       if (!file) {

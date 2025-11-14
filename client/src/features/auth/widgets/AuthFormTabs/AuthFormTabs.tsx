@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type MouseEvent } from 'react';
 import { ToggleButton, ToggleButtonGroup, Box } from '@mui/material';
 
 import { SignInForm } from '../../ui/SignInForm';
@@ -10,7 +10,7 @@ export const AuthFormTabs = () => {
   const [mode, setMode] = useState<AuthMode>('sign-in');
 
   const handleModeChange = (
-    event: React.MouseEvent<HTMLElement>,
+    event: MouseEvent<HTMLElement>,
     newMode: AuthMode | null
   ) => {
     if (newMode !== null) {

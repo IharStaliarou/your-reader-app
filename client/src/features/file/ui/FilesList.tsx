@@ -7,7 +7,6 @@ import { useDeleteFileMutation, useGetUserFilesQuery } from '../api/file.api';
 export const FilesList = () => {
   const { data: filesData, isLoading, isError, error } = useGetUserFilesQuery();
   const { mutate: deleteFile } = useDeleteFileMutation();
-
   const handleDelete = (fileId: string) => {
     deleteFile(fileId);
   };
