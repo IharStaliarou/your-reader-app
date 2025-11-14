@@ -30,7 +30,7 @@ export const Sidebar = () => {
           color='primary'
           sx={{ fontWeight: 'bold', mb: 3 }}
         >
-          File Analyzer
+          YOUR READER
         </Typography>
         <List component='nav'>
           {visibleLinks.map((link) => (

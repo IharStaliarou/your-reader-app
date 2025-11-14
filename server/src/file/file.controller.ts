@@ -10,13 +10,11 @@ import {
   Get,
   NotFoundException,
   Param,
-  Res,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { type Request, type Response } from 'express';
-import fs from 'fs';
-
+import { type Request } from 'express';
 import { User } from '@prisma/client';
 import { type IUploadedFile } from './dto/upload-file.dto';
 import { FileService } from './file.service';
@@ -28,18 +26,18 @@ import {
   MULTER_FIELD_NAME,
 } from 'src/constants/file.constants';
 import { CurrentUser } from '@decorators/current-user.decorator';
+import { IFilePageContent } from './interfaces/file.interface';
 
 interface AuthenticatedRequest extends Request {
   user: User;
 }
 
 @Controller('files')
-@UseGuards(JwtAuthGuard) // TODO: optionally ?!
+@UseGuards(JwtAuthGuard)
 export class FileController {
   constructor(private readonly fileService: FileService) {}
 
   @Post('upload')
-  // @UseGuards(JwtAuthGuard) // TODO: this or global
   @UseInterceptors(
     FileInterceptor(MULTER_FIELD_NAME, {
       limits: {
@@ -69,7 +67,6 @@ export class FileController {
     }
 
     const userId = req.user.id;
-
     const savedFile = await this.fileService.saveFileMetadata(file, userId);
 
     return {
@@ -99,10 +96,18 @@ export class FileController {
   @Get(':fileId/content')
   async getFileContent(
     @Param('fileId') fileId: string,
-    @Req() req: AuthenticatedRequest,
-    @Res() res: Response,
-  ) {
-    const userId = req.user.id;
+    @CurrentUser('id') userId: string,
+    @Query('page') page: string = '1',
+    @Query('pageSize') pageSize: string = '10000',
+  ): Promise<IFilePageContent> {
+    const pageNumber = parseInt(page, 10);
+    const size = parseInt(pageSize, 10);
+
+    if (isNaN(pageNumber) || pageNumber < 1 || isNaN(size) || size < 1) {
+      throw new BadRequestException(
+        'Invalid pagination parameters (page/pageSize).',
+      );
+    }
 
     const fileMetadata = await this.fileService.getFileById(fileId, userId);
 
@@ -112,20 +117,13 @@ export class FileController {
       );
     }
 
-    res.setHeader('Content-Type', fileMetadata.mimeType);
-    res.setHeader(
-      'Content-Disposition',
-      `inline; filename="${fileMetadata.originalName}"`,
+    const pageContent = await this.fileService.getFileContentPage(
+      fileMetadata,
+      pageNumber,
+      size,
     );
 
-    try {
-      const fileStream = fs.createReadStream(fileMetadata.filePath);
-      fileStream.pipe(res);
-    } catch (error) {
-      throw new NotFoundException(
-        `Physical file not found at path: ${fileMetadata.filePath}`,
-      );
-    }
+    return pageContent;
   }
 
   @Delete(':fileId')

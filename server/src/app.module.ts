@@ -8,6 +8,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { TokenModule } from './token/token.module';
 import { FileModule } from './file/file.module';
+import { BookmarkModule } from './bookmark/bookmark.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { FileModule } from './file/file.module';
     ConfigModule.forRoot({ isGlobal: true }),
     TokenModule,
     FileModule,
+    BookmarkModule,
   ],
   controllers: [],
 

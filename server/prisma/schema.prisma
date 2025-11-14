@@ -57,6 +57,7 @@ model Bookmark {
   textFragment String @map("text_fragment")
   startChar    Int    @map("start_char")
   endChar      Int    @map("end_char")
+  color        String @default("#a8e6cf")
 
   fileId String @map("file_id")
   file   File   @relation(fields: [fileId], references: [id])

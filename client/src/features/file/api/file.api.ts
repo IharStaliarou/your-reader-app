@@ -15,13 +15,12 @@ import type {
   IUploadedFileData,
   IFileUploadResponse,
   IFilesResponse,
+  IFilePageContent,
 } from '@/shared/interfaces/file.interface';
 import { extractErrorMessage } from '@/shared/utils/error.utils';
-
-export const fileQueryKeys = {
-  files: ['files'] as const,
-  fileContent: (fileId: string) => ['fileContent', fileId] as const,
-};
+import { useFileStore } from '../store/file.store';
+import { FILE_QUERY_KEYS } from '@/shared/constants/queryKeys.constants';
+import { DEFAULT_PAGE_SIZE } from '@/shared/constants/file.constants';
 
 const uploadFile = async ({
   file,
@@ -53,10 +52,20 @@ const fetchUserFiles = async (): Promise<IFilesResponse> => {
   return response.data;
 };
 
-const fetchFileContent = async (fileId: string): Promise<string> => {
-  const response = await $api.get(`${API_GET_FILE_CONTENT_URL(fileId)}`, {
-    responseType: 'text',
-  });
+interface IFileContentPageParams {
+  fileId: string;
+  page: number;
+  pageSize: number;
+}
+
+const fetchFileContent = async ({
+  fileId,
+  page,
+  pageSize,
+}: IFileContentPageParams): Promise<IFilePageContent> => {
+  const response = await $api.get<IFilePageContent>(
+    `${API_GET_FILE_CONTENT_URL(fileId)}?page=${page}&pageSize=${pageSize}`
+  );
   return response.data;
 };
 
@@ -66,8 +75,7 @@ export const useUploadFileMutation = () => {
   return useMutation({
     mutationFn: uploadFile,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: fileQueryKeys.files });
-
+      queryClient.invalidateQueries({ queryKey: FILE_QUERY_KEYS.files });
       toast.success(`File "${data.fileName}" uploaded successfully!`);
     },
     onError: (error: AxiosError<any>) => {
@@ -76,7 +84,6 @@ export const useUploadFileMutation = () => {
         error.response?.status === 400
           ? `Client Error (400): ${message}`
           : `Upload Error: ${message}`;
-
       toast.error(displayMessage);
       return Promise.reject(error);
     },
@@ -85,36 +92,47 @@ export const useUploadFileMutation = () => {
 
 export const useGetUserFilesQuery = () => {
   return useQuery<IFilesResponse, AxiosError>({
-    queryKey: fileQueryKeys.files,
+    queryKey: FILE_QUERY_KEYS.files,
     queryFn: fetchUserFiles,
     staleTime: FIVE_MINUTES_MS,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
+    retry: 1,
   });
 };
 
-export const useGetFileContentQuery = (fileId: string | null) => {
-  const enabled = !!fileId;
+export const useGetFileContentQuery = (
+  params: IFileContentPageParams | null
+) => {
+  const enabled = !!params;
+  const { fileId, page, pageSize } = params || {
+    fileId: '',
+    page: 1,
+    pageSize: DEFAULT_PAGE_SIZE,
+  };
 
-  return useQuery({
-    queryKey: fileQueryKeys.fileContent(fileId!),
-    queryFn: () => fetchFileContent(fileId!),
+  return useQuery<IFilePageContent, AxiosError>({
+    queryKey: FILE_QUERY_KEYS.fileContent(fileId, page, pageSize),
+    queryFn: () => fetchFileContent({ fileId, page, pageSize }),
     enabled: enabled,
     staleTime: Infinity,
     retry: 1,
+    refetchOnWindowFocus: false,
   });
 };
 
 export const useDeleteFileMutation = () => {
   const queryClient = useQueryClient();
+  const activeFileId = useFileStore((state) => state.activeFileId);
+  const clearActiveFileId = useFileStore((state) => state.clearActiveFileId);
 
   return useMutation({
     mutationFn: deleteFile,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: fileQueryKeys.files });
-
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: FILE_QUERY_KEYS.files });
       toast.success(data.message || `File successfully deleted!`);
-
-      // TODO: add work with store for correct file deletion in real time and use activeFileId in future
+      if (variables === activeFileId) {
+        clearActiveFileId();
+      }
     },
     onError: (error: AxiosError<any>) => {
       const message = extractErrorMessage(error, 'Error deleting file');
