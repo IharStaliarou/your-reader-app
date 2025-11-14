@@ -5,11 +5,11 @@ import { TextField, Button, Box } from '@mui/material';
 import { SignUpSchema, type ISignUpData } from '../lib/validation';
 import { useSignUpMutation } from '../api/auth.api';
 
-interface SignUpFormProps {
+interface ISignUpFormProps {
   onSuccess: () => void;
 }
 
-export const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess }) => {
+export const SignUpForm = ({ onSuccess }: ISignUpFormProps) => {
   const { mutate: signUpMutate, isPending } = useSignUpMutation();
 
   const {

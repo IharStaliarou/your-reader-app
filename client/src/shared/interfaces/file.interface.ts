@@ -26,3 +26,15 @@ export interface IFileUploadResponse {
 export interface IUploadedFileData {
   file: File;
 }
+
+export interface IFilePageContent {
+  content: string;
+  startCharIndex: number;
+  endCharIndex: number;
+  currentPage: number;
+  totalPages: number;
+  totalLength: number;
+  fileId: string;
+}
+
+export type ScrollToCharFnType = (startChar: number) => void;

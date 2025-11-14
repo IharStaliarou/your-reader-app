@@ -9,6 +9,7 @@ const FilesPage = () => {
       <Typography variant='h3' component='h1' gutterBottom>
         My Documents
       </Typography>
+
       <Box className='mb-8'>
         <FileUploadForm />
       </Box>

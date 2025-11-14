@@ -23,5 +23,12 @@ export const API_UPLOAD_FILE_URL = `${API_FILES_URL}/upload`;
 export const API_DELETE_FILE_URL = (fileId: string) =>
   `${API_FILES_URL}/${fileId}`;
 
+/* bookmark endpoints */
+export const API_BOOKMARKS_URL = `${API_BASE_URL}/bookmarks`;
+export const API_GET_BOOKMARKS_BY_FILE_URL = (fileId: string) =>
+  `${API_BOOKMARKS_URL}/${MULTER_FIELD_NAME}/${fileId}`;
+export const API_DELETE_BOOKMARK_URL = (bookmarkId: string) =>
+  `${API_BOOKMARKS_URL}/${bookmarkId}`;
+
 /* other */
 export const MULTER_FIELD_NAME = 'file';
