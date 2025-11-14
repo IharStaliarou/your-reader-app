@@ -19,22 +19,32 @@ export const TypewriterText = ({
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    const initialTimer = setTimeout(() => {
-      if (currentIndex < text.length) {
-        const charTimer = setInterval(() => {
-          setCurrentIndex((prevIndex) => prevIndex + 1);
-        }, delay);
+    let initialTimer: ReturnType<typeof setTimeout>;
+    let charTimer: ReturnType<typeof setInterval>;
 
-        return () => clearInterval(charTimer);
-      } else {
-        if (onAnimationEnd) {
-          onAnimationEnd();
-        }
-      }
+    initialTimer = setTimeout(() => {
+      charTimer = setInterval(() => {
+        setCurrentIndex((prevIndex) => {
+          const nextIndex = prevIndex + 1;
+
+          if (nextIndex > text.length) {
+            clearInterval(charTimer);
+            if (onAnimationEnd) {
+              onAnimationEnd();
+            }
+            return prevIndex;
+          }
+
+          return nextIndex;
+        });
+      }, delay);
     }, initialDelay);
 
-    return () => clearTimeout(initialTimer);
-  }, [text, delay, initialDelay, currentIndex, onAnimationEnd]);
+    return () => {
+      clearTimeout(initialTimer);
+      clearInterval(charTimer);
+    };
+  }, [text, delay, initialDelay, onAnimationEnd]);
 
   useEffect(() => {
     setDisplayedText(text.substring(0, currentIndex));
@@ -43,7 +53,7 @@ export const TypewriterText = ({
   return (
     <Typography {...typographyProps}>
       {displayedText}
-      {currentIndex < text.length && <span className='animate-blink'>|</span>}
+      {currentIndex <= text.length && <span className='animate-blink'>|</span>}
     </Typography>
   );
 };
