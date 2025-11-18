@@ -21,6 +21,7 @@ import {
   useCreateBookmarkMutation,
 } from '../api/bookmark.api';
 import { NOTE_COLORS } from '@/shared/constants/color.constants';
+import { errorSizeBookmarkCreating } from '@/shared/utils/bookmark.utils';
 
 interface IOverlapModalProps {
   open: boolean;
@@ -57,6 +58,14 @@ export const OverlapModal = ({
   }, [open, initialData.color]);
 
   const handleForceCreate = () => {
+    const bookmarkSize = initialData.textFragment.length;
+    const isValidSize = errorSizeBookmarkCreating(bookmarkSize);
+
+    if (!isValidSize) {
+      onClose();
+      return;
+    }
+
     onDeleteAndCreateNew(
       idsToDelete,
       title.trim() || 'Untitled Note',

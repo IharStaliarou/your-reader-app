@@ -19,6 +19,7 @@ import {
 import { useCreateBookmarkMutation } from '../api/bookmark.api';
 import { useFileStore } from '@/features/file/store/file.store';
 import { NOTE_COLORS } from '@/shared/constants/color.constants';
+import { errorSizeBookmarkCreating } from '@/shared/utils/bookmark.utils';
 
 interface ICreateBookmarkModalProps {
   open: boolean;
@@ -60,6 +61,14 @@ export const CreateBookmarkModal = ({
       endChar: initialData.endChar,
       color: selectedColor,
     };
+
+    const isValidSize = errorSizeBookmarkCreating(
+      bookmarkDto.textFragment.length
+    );
+    if (!isValidSize) {
+      onClose();
+      return;
+    }
 
     console.log('Attempting to create bookmark:', bookmarkDto);
 

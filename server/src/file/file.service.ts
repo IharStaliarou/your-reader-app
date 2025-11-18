@@ -38,18 +38,18 @@ export class FileService {
 
       if (bytesRead === 0) {
         return startByte;
-      } 
+      }
 
       const bufferStartOffset = startByte - bytesRead;
       let checkOffset = 0;
 
       while (checkOffset < bytesRead) {
-        const byte = buffer[checkOffset]; 
+        const byte = buffer[checkOffset];
 
         if ((byte & 0x80) === 0x00) {
           checkOffset++;
           continue;
-        } /
+        }
 
         if ((byte & 0xc0) === 0xc0) {
           try {
@@ -59,7 +59,7 @@ export class FileService {
               const byteLengthOfFirstChar = Buffer.from(
                 firstChar,
                 'utf8',
-              ).length; 
+              ).length;
 
               if (
                 bufferStartOffset + checkOffset < startByte &&
@@ -79,7 +79,7 @@ export class FileService {
           checkOffset++;
         }
       }
-      return startByte; 
+      return startByte;
     } catch (error) {
       console.error('UTF-8 adjustment error:', error);
       return startByte;
@@ -155,25 +155,24 @@ export class FileService {
         totalLength: 0,
         fileId: fileMetadata.id,
       };
-    } 
+    }
 
     const totalPages = Math.ceil(totalLengthBytes / pageSize);
     const safePage = Math.min(Math.max(1, page), totalPages);
 
-    let startByteIndex = (safePage - 1) * pageSize; 
+    let startByteIndex = (safePage - 1) * pageSize;
     let endByteIndex =
-      Math.min(startByteIndex + pageSize, totalLengthBytes) - 1; 
+      Math.min(startByteIndex + pageSize, totalLengthBytes) - 1;
 
     if (fileMetadata.mimeType === 'text/plain') {
       startByteIndex = await this.adjustByteRangeForUtf8(
         fileMetadata.filePath,
         startByteIndex,
-      ); 
+      );
       endByteIndex = Math.min(startByteIndex + pageSize, totalLengthBytes) - 1;
     }
 
     if (startByteIndex >= totalLengthBytes) {
-    
       throw new BadRequestException(`Page ${page} is out of bounds.`);
     }
 
@@ -183,7 +182,7 @@ export class FileService {
       const readStream = fsn.createReadStream(fileMetadata.filePath, {
         encoding: 'utf8',
         start: startByteIndex,
-        end: endByteIndex, 
+        end: endByteIndex,
       });
 
       content = await new Promise<string>((resolve, reject) => {
