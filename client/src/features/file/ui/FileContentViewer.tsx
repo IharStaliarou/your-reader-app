@@ -5,6 +5,7 @@ import {
   useEffect,
   useRef,
   type CSSProperties,
+  type MouseEvent,
 } from 'react';
 
 import { useWordSelection } from '@/features/file/hooks/useWordSelection';
@@ -13,12 +14,10 @@ import {
   useDeleteBookmarkMutation,
   useCreateBookmarkMutation,
 } from '@/features/bookmark/api/bookmark.api';
-
 import { SelectionTooltip } from '@/features/bookmark/ui/SelectionTooltip';
 import { CreateBookmarkModal } from '@/features/bookmark/ui/CreateBookmarkModal';
 import { DeleteBookmarkModal } from '@/features/bookmark/ui/DeleteBookmarkModal';
 import { OverlapModal } from '@/features/bookmark/ui/OverlapModal';
-
 import { tokenizeContent } from '@/shared/utils/text.utils';
 import type { ScrollToCharFnType } from '@/shared/interfaces/file.interface';
 import { CONTENT_HEIGHT } from '@/shared/constants/file.constants';
@@ -69,6 +68,7 @@ export const FileContentViewer = ({
     handleOpenCreateModalFromTooltip,
     handleCloseTooltip,
     getOverlappingBookmarks,
+    recalculateTooltipPosition,
   } = useWordSelection(tokens, globalCharOffset);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -90,7 +90,7 @@ export const FileContentViewer = ({
       if (wordSelection.startTokenIndex === null) return false;
 
       const start = wordSelection.startTokenIndex;
-      const end = wordSelection.endTokenIndex;
+      const end = wordSelection.endTokenIndex!; // TODO: fix type conflict
 
       return (
         tokenIndex >= Math.min(start, end) && tokenIndex <= Math.max(start, end)
@@ -122,6 +122,27 @@ export const FileContentViewer = ({
       handleCloseOverlapModal,
     ]
   );
+
+  useEffect(() => {
+    const containerElement = containerRef.current;
+    if (!containerElement) return;
+
+    const handleScroll = () => {
+      if (isTooltipOpen) {
+        recalculateTooltipPosition(containerElement);
+      }
+    };
+
+    containerElement.addEventListener('scroll', handleScroll);
+
+    if (isTooltipOpen) {
+      recalculateTooltipPosition(containerElement);
+    }
+
+    return () => {
+      containerElement.removeEventListener('scroll', handleScroll);
+    };
+  }, [recalculateTooltipPosition, isTooltipOpen]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -219,14 +240,19 @@ export const FileContentViewer = ({
             return (
               <span
                 key={index}
-                onClick={(e) =>
+                onClick={(e: MouseEvent<HTMLSpanElement>) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
                   handleWordClick(
                     index,
                     isPermanentBookmark,
                     bookmark || undefined,
-                    e
-                  )
-                }
+                    {
+                      clientX: rect.left,
+                      clientY: rect.top,
+                      width: rect.width,
+                    }
+                  );
+                }}
                 style={style}
               >
                 {token}

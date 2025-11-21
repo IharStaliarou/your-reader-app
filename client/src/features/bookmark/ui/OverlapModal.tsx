@@ -58,14 +58,6 @@ export const OverlapModal = ({
   }, [open, initialData.color]);
 
   const handleForceCreate = () => {
-    const bookmarkSize = initialData.textFragment.length;
-    const isValidSize = errorSizeBookmarkCreating(bookmarkSize);
-
-    if (!isValidSize) {
-      onClose();
-      return;
-    }
-
     onDeleteAndCreateNew(
       idsToDelete,
       title.trim() || 'Untitled Note',
@@ -123,7 +115,6 @@ export const OverlapModal = ({
             </Grid>
           ))}
         </Grid>
-        {/* Конец выбора цвета */}
         <Box
           sx={{
             mt: 2,
