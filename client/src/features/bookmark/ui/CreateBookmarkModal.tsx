@@ -62,14 +62,6 @@ export const CreateBookmarkModal = ({
       color: selectedColor,
     };
 
-    const isValidSize = errorSizeBookmarkCreating(
-      bookmarkDto.textFragment.length
-    );
-    if (!isValidSize) {
-      onClose();
-      return;
-    }
-
     console.log('Attempting to create bookmark:', bookmarkDto);
 
     createBookmark(bookmarkDto, {

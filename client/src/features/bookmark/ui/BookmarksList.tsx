@@ -12,6 +12,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { useBookmarkStore } from '../store/bookmark.store';
 import { useDeleteBookmarkMutation } from '../api/bookmark.api';
+import { DeleteBookmarkModal } from './DeleteBookmarkModal';
+import { useState } from 'react';
+import type { IBookmark } from '@/shared/interfaces/bookmark.interface';
 
 interface IBookmarksListProps {
   onScrollToChar: (startChar: number) => void;
@@ -19,11 +22,21 @@ interface IBookmarksListProps {
 
 export const BookmarksList = ({ onScrollToChar }: IBookmarksListProps) => {
   const { bookmarks, isLoading } = useBookmarkStore();
-  const { mutate: deleteBookmark, isPending: isDeleting } =
-    useDeleteBookmarkMutation();
+  const { isPending: isDeleting } = useDeleteBookmarkMutation();
 
-  const handleDelete = (bookmarkId: string) => {
-    deleteBookmark(bookmarkId);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [bookmarkToDelete, setBookmarkToDelete] = useState<IBookmark | null>(
+    null
+  );
+
+  const handleOpenDeleteModal = (bookmark: IBookmark) => {
+    setBookmarkToDelete(bookmark);
+    setDeleteModalOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setBookmarkToDelete(null);
+    setDeleteModalOpen(false);
   };
 
   if (isLoading) {
@@ -49,13 +62,12 @@ export const BookmarksList = ({ onScrollToChar }: IBookmarksListProps) => {
       <Typography variant='h6' gutterBottom>
         Bookmarks ({bookmarks.length})
       </Typography>
-      <List dense disablePadding>
+      <List dense disablePadding sx={{ width: '600px' }}>
         {bookmarks.map((bookmark) => (
           <ListItem
             key={bookmark.id}
             secondaryAction={
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                {/* 1. Кнопка перехода */}
                 <IconButton
                   edge='end'
                   aria-label='go to fragment'
@@ -70,7 +82,7 @@ export const BookmarksList = ({ onScrollToChar }: IBookmarksListProps) => {
                   aria-label='delete'
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleDelete(bookmark.id);
+                    handleOpenDeleteModal(bookmark);
                   }}
                   disabled={isDeleting}
                   color='error'
@@ -109,6 +121,13 @@ export const BookmarksList = ({ onScrollToChar }: IBookmarksListProps) => {
           </ListItem>
         ))}
       </List>
+      {isDeleteModalOpen && bookmarkToDelete && (
+        <DeleteBookmarkModal
+          open={isDeleteModalOpen}
+          onClose={handleCloseDeleteModal}
+          bookmark={bookmarkToDelete}
+        />
+      )}
     </Box>
   );
 };

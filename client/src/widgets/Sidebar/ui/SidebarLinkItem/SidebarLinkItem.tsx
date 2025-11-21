@@ -9,7 +9,8 @@ interface ISidebarLinkItemProps {
 
 export const SidebarLinkItem = ({ link }: ISidebarLinkItemProps) => {
   const location = useLocation();
-  const isSelected = location.pathname === link.to;
+  const isSelected =
+    location.pathname === link.to || location.pathname.includes(link.to);
 
   return (
     <ListItemButton

@@ -9,7 +9,7 @@ export interface ISidebarLink {
 }
 
 export const publicLinks: ISidebarLink[] = [
-  { to: '/files', icon: FolderSharedIcon, label: 'My Files' },
+  { to: '/files', icon: FolderSharedIcon, label: 'My Files' }, // TODO: create dropdown for list of files
 ];
 
 export const protectedLinks: ISidebarLink[] = [

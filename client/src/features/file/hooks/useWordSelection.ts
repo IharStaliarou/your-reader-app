@@ -5,7 +5,6 @@ import {
   type Dispatch,
   type SetStateAction,
   useEffect,
-  type MouseEvent,
 } from 'react';
 
 import { useBookmarkStore } from '@/features/bookmark/store/bookmark.store';
@@ -15,6 +14,15 @@ import type {
   IFragmentData,
   IWordSelectionState,
 } from '@/shared/interfaces/bookmark.interface';
+import { errorSizeBookmarkCreating } from '@/shared/utils/bookmark.utils';
+
+interface IAnchorPosition {
+  clientX: number;
+  clientY: number;
+  width: number;
+}
+
+const TOOLTIP_OFFSET_PX = 40;
 
 // TODO: destructure this
 export interface IUseWordSelectionResult {
@@ -31,7 +39,7 @@ export interface IUseWordSelectionResult {
     tokenIndex: number,
     isPermanentBookmark: boolean,
     clickedBookmark?: IBookmark,
-    clickEvent?: MouseEvent<HTMLSpanElement>
+    anchorData?: IAnchorPosition
   ) => void;
   handleCloseCreateModal: () => void;
   handleCloseDeleteModal: () => void;
@@ -39,6 +47,7 @@ export interface IUseWordSelectionResult {
   getOverlappingBookmarks: () => IBookmark[];
   handleOpenCreateModalFromTooltip: () => void;
   handleCloseTooltip: () => void;
+  recalculateTooltipPosition: (containerElement: HTMLDivElement) => void;
   setTargetBookmark: Dispatch<SetStateAction<IBookmark | null>>;
   setCreateModalOpen: Dispatch<SetStateAction<boolean>>;
   setDeleteModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -63,6 +72,9 @@ export const useWordSelection = (
   const [tooltipText, setTooltipText] = useState('Select start word');
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [anchorPosition, setAnchorPosition] = useState<IAnchorPosition | null>(
+    null
+  );
 
   const tokenLengths = useMemo(
     () => tokens.map((token) => token.length),
@@ -89,6 +101,7 @@ export const useWordSelection = (
     setOverlapModalOpen(false);
     setTooltipText('Select start word');
     setIsTooltipOpen(false);
+    setAnchorPosition(null);
   }, [globalCharOffset]);
 
   const getCharBoundaries = useCallback(
@@ -146,14 +159,36 @@ export const useWordSelection = (
     return checkOverlap(fragmentData.startChar, fragmentData.endChar);
   }, [fragmentData.startChar, fragmentData.endChar, checkOverlap]);
 
+  const recalculateTooltipPosition = useCallback(
+    (containerElement: HTMLDivElement) => {
+      if (!anchorPosition) return;
+
+      const containerRect = containerElement.getBoundingClientRect();
+
+      const { clientX, clientY, width } = anchorPosition;
+
+      const left = clientX - containerRect.left + width / 2;
+
+      const top =
+        clientY - containerRect.top + containerElement.scrollTop + 170;
+
+      setTooltipPosition({
+        x: left,
+        y: top - TOOLTIP_OFFSET_PX,
+      });
+    },
+    [anchorPosition]
+  );
+
   const handleWordClick = useCallback(
     (
       tokenIndex: number,
       isPermanentBookmark: boolean,
       clickedBookmark?: IBookmark,
-      clickEvent?: MouseEvent<HTMLSpanElement>
+      anchorData?: IAnchorPosition
     ) => {
       setIsTooltipOpen(false);
+      setAnchorPosition(null);
 
       if (isPermanentBookmark && clickedBookmark) {
         setTargetBookmark(clickedBookmark);
@@ -161,13 +196,13 @@ export const useWordSelection = (
         return;
       }
 
+      if (anchorData) {
+        setAnchorPosition(anchorData);
+      }
+
       setWordSelection((prev) => {
         if (prev.startTokenIndex === null || prev.isComplete) {
-          if (clickEvent) {
-            setTooltipPosition({
-              x: clickEvent.clientX,
-              y: clickEvent.clientY,
-            });
+          if (anchorData) {
             setIsTooltipOpen(true);
           }
           setTooltipText('Select more or create bookmark');
@@ -186,11 +221,7 @@ export const useWordSelection = (
           tokenIndex >= newStart - 1 && tokenIndex <= newEnd + 1;
 
         if (isAdjacent) {
-          if (clickEvent) {
-            setTooltipPosition({
-              x: clickEvent.clientX,
-              y: clickEvent.clientY,
-            });
+          if (anchorData) {
             setIsTooltipOpen(true);
           }
           setTooltipText('Select more or create bookmark');
@@ -228,25 +259,45 @@ export const useWordSelection = (
 
   const handleOpenCreateModalFromTooltip = useCallback(() => {
     setIsTooltipOpen(false);
+
+    const bookmarkSize = fragmentData.textFragment.length;
+    const isValidSize = errorSizeBookmarkCreating(bookmarkSize);
+
+    if (!isValidSize) {
+      setWordSelection({
+        startTokenIndex: null,
+        endTokenIndex: null,
+        isComplete: false,
+      });
+      setTooltipText('Select start word');
+      setAnchorPosition(null);
+      return;
+    }
+
+    setWordSelection((prev) => ({ ...prev, isComplete: true }));
+
     const overlapping = getOverlappingBookmarks();
 
     if (overlapping.length > 0) {
       setOverlapModalOpen(true);
       setTooltipText('Overlap detected. Check modal window.');
-      setWordSelection((prev) => ({ ...prev, isComplete: true }));
     } else {
       setCreateModalOpen(true);
       setTooltipText('Selection completed. Click to start new word.');
-      setWordSelection((prev) => ({ ...prev, isComplete: true }));
     }
-  }, [getOverlappingBookmarks]);
+  }, [getOverlappingBookmarks, fragmentData]);
 
   const handleCloseTooltip = useCallback(() => {
     setIsTooltipOpen(false);
+    setWordSelection({
+      startTokenIndex: null,
+      endTokenIndex: null,
+      isComplete: false,
+    });
     if (!wordSelection.isComplete) {
       setTooltipText('Select more or create bookmark');
     } else {
-      setTooltipText('Selection completed. Click to start new word.');
+      setTooltipText('Selection completed. Click to start new word');
     }
   }, [wordSelection.isComplete]);
 
@@ -258,6 +309,7 @@ export const useWordSelection = (
       isComplete: false,
     });
     setTooltipText('Select start word');
+    setAnchorPosition(null);
   }, []);
 
   const handleCloseOverlapModal = useCallback(() => {
@@ -268,6 +320,7 @@ export const useWordSelection = (
       isComplete: false,
     });
     setTooltipText('Select start word');
+    setAnchorPosition(null);
   }, []);
 
   const handleCloseDeleteModal = useCallback(() => {
@@ -292,6 +345,7 @@ export const useWordSelection = (
     handleOpenCreateModalFromTooltip,
     handleCloseTooltip,
     getOverlappingBookmarks,
+    recalculateTooltipPosition,
     setTargetBookmark,
     setCreateModalOpen,
     setDeleteModalOpen,

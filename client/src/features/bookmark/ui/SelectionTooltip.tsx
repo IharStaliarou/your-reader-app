@@ -18,7 +18,7 @@ interface ISelectionTooltipProps {
 
 export const SelectionTooltip = ({
   open,
-  onClose,
+  onClose, // TODO: create method for closing tooltip
   onConfirm,
   position,
   tooltipText,
@@ -26,31 +26,34 @@ export const SelectionTooltip = ({
   if (!open) return null;
 
   const style: CSSProperties = {
-    position: 'fixed',
-    top: position.y - 10,
-    left: position.x + 10,
-    zIndex: 1500,
+    position: 'absolute',
+    top: position.y,
+    left: position.x,
+    zIndex: 100,
     transform: 'translateY(-100%)',
     maxWidth: 250,
   };
 
   return (
-    <ClickAwayListener onClickAway={onClose}>
+    <ClickAwayListener onClickAway={() => {}}>
       <Paper elevation={8} sx={style}>
         <Box sx={{ p: 1.5 }}>
           <Typography variant='body2' sx={{ mb: 1, color: 'text.secondary' }}>
             {tooltipText}
           </Typography>
-          <Button
-            size='small'
-            variant='contained'
-            color='primary'
-            onClick={onConfirm}
-            startIcon={<BookmarkAddIcon />}
-            fullWidth
-          >
-            Create Note
-          </Button>
+          <Box className='flex gap-2'>
+            <Button onClick={onClose}>Cancel</Button>
+            <Button
+              size='small'
+              variant='contained'
+              color='primary'
+              onClick={onConfirm}
+              startIcon={<BookmarkAddIcon />}
+              fullWidth
+            >
+              Create Note
+            </Button>
+          </Box>
         </Box>
       </Paper>
     </ClickAwayListener>
