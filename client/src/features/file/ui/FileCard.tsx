@@ -1,7 +1,6 @@
 import {
   Card,
   CardContent,
-  Button,
   Box,
   IconButton,
   Typography,
@@ -10,10 +9,10 @@ import {
 import FileIcon from '@mui/icons-material/Description';
 import DeleteIcon from '@mui/icons-material/Delete';
 import BookOpenIcon from '@mui/icons-material/Book';
-import { useNavigate } from 'react-router-dom';
 
 import type { IFile } from '@/shared/interfaces/file.interface';
 import { formatDate } from '@/shared/utils/date.utils';
+import { LinkButton } from '@/shared/ui/LinkButton/LinkButton';
 
 interface IFileCardProps {
   file: IFile;
@@ -21,7 +20,6 @@ interface IFileCardProps {
 }
 
 export const FileCard = ({ file, onDelete }: IFileCardProps) => {
-  const navigate = useNavigate();
   return (
     // TODO: fix conflict
     // @ts-ignore
@@ -64,17 +62,15 @@ export const FileCard = ({ file, onDelete }: IFileCardProps) => {
             pt: 0,
           }}
         >
-          <Button
+          <LinkButton
+            to={`/files/${file.id}`}
+            label='Read'
             variant='contained'
             color='primary'
             startIcon={<BookOpenIcon />}
             size='small'
             sx={{ flexGrow: 1, mr: 1 }}
-            onClick={() => navigate(`/files/${file.id}`)}
-          >
-            Read
-          </Button>
-
+          />
           <IconButton
             color='error'
             aria-label='delete file'

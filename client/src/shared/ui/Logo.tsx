@@ -1,15 +1,12 @@
-import { Typography } from '@mui/material';
+import { LinkButton } from './LinkButton/LinkButton';
 
 export const Logo = () => {
   return (
-    <Typography
-      variant='h6'
-      noWrap
-      component='a'
-      href='/'
-      className='text-2xl font-extrabold text-indigo-600 hover:text-indigo-800 transition duration-300 tracking-wider'
-    >
-      YOUR READER
-    </Typography>
+    <LinkButton
+      label='YOU READER'
+      variant='text'
+      to='/'
+      className='bg-clip-text transition duration-300 tracking-wider'
+    />
   );
 };

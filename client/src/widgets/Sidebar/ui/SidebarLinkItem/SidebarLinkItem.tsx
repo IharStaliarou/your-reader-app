@@ -5,9 +5,13 @@ import type { ISidebarLink } from '../../config/sidebar.config';
 
 interface ISidebarLinkItemProps {
   link: ISidebarLink;
+  isHorizontal?: boolean;
 }
 
-export const SidebarLinkItem = ({ link }: ISidebarLinkItemProps) => {
+export const SidebarLinkItem = ({
+  link,
+  isHorizontal = false,
+}: ISidebarLinkItemProps) => {
   const location = useLocation();
   const isSelected =
     location.pathname === link.to || location.pathname.includes(link.to);
@@ -18,6 +22,11 @@ export const SidebarLinkItem = ({ link }: ISidebarLinkItemProps) => {
       component={NavLink}
       to={link.to}
       selected={isSelected}
+      sx={{
+        py: isHorizontal ? 0.5 : 1,
+        px: isHorizontal ? 1 : 2,
+        mr: isHorizontal ? 1 : 0,
+      }}
     >
       <ListItemIcon sx={{ minWidth: 40 }}>
         <link.icon color={isSelected ? 'primary' : 'inherit'} />

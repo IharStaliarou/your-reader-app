@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Box, Button, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 
 import { useVerifyMutation } from '@/features/auth/api/auth.api';
 import { type IVerifyResponse } from '@/shared/interfaces/auth.interface';
+import { AppButton } from '@/shared/ui/AppButton/AppButton';
 
 const VerificationPage = () => {
   const location = useLocation();
@@ -44,13 +45,12 @@ const VerificationPage = () => {
             🎉 Success!
           </Typography>
           <Typography variant='body1'>{data?.message}</Typography>
-          <Button
+          <AppButton
+            label='Sign in now'
             onClick={() => navigate('/auth')}
             variant='contained'
             className='mt-6 bg-indigo-600 hover:bg-indigo-700'
-          >
-            Sign in now
-          </Button>
+          />
         </>
       );
     }
@@ -66,13 +66,12 @@ const VerificationPage = () => {
             🚫 Error!
           </Typography>
           <Typography variant='body1'>{errorMessage}</Typography>
-          <Button
+          <AppButton
+            label='Back to main page'
             onClick={() => navigate('/')}
             variant='outlined'
             className='mt-6 text-indigo-600 border-indigo-600'
-          >
-            Back to main page
-          </Button>
+          />
         </>
       );
     }

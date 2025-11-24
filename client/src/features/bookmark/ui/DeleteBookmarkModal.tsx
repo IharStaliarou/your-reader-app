@@ -3,7 +3,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Button,
   Typography,
   Box,
   CircularProgress,
@@ -11,6 +10,7 @@ import {
 
 import { type IBookmark } from '@/shared/interfaces/bookmark.interface';
 import { useDeleteBookmarkMutation } from '../api/bookmark.api';
+import { AppButton } from '@/shared/ui/AppButton/AppButton';
 
 // TODO: create universal modal for all actions
 interface IDeleteBookmarkModalProps {
@@ -73,21 +73,26 @@ export const DeleteBookmarkModal = ({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose} color='inherit' disabled={isDeleting}>
-          Cancel
-        </Button>
-        <Button
+        <AppButton
+          label='Cancel'
+          onClick={onClose}
+          color='inherit'
+          disabled={isDeleting}
+        />
+
+        <AppButton
+          label={
+            isDeleting ? (
+              <CircularProgress size={24} color='inherit' />
+            ) : (
+              'Delete'
+            )
+          }
           onClick={handleDelete}
           color='error'
           variant='contained'
           disabled={isDeleting}
-        >
-          {isDeleting ? (
-            <CircularProgress size={24} color='inherit' />
-          ) : (
-            'Delete'
-          )}
-        </Button>
+        />
       </DialogActions>
     </Dialog>
   );

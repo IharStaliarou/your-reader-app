@@ -1,9 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Box } from '@mui/material';
 
 import { SignUpSchema, type ISignUpData } from '../lib/validation';
 import { useSignUpMutation } from '../api/auth.api';
+import { AppButton } from '@/shared/ui/AppButton/AppButton';
 
 interface ISignUpFormProps {
   onSuccess: () => void;
@@ -102,15 +103,14 @@ export const SignUpForm = ({ onSuccess }: ISignUpFormProps) => {
         helperText={errors.repeatPassword?.message}
       />
 
-      <Button
+      <AppButton
+        label={isPending ? 'Signing up...' : 'Sign up'}
         type='submit'
         variant='contained'
         color='secondary'
         disabled={isPending}
         className='mt-2 py-3'
-      >
-        {isPending ? 'Signing up...' : 'Sign up'}
-      </Button>
+      />
     </Box>
   );
 };

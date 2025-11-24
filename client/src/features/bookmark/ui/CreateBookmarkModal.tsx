@@ -4,7 +4,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Button,
   TextField,
   Box,
   Typography,
@@ -19,7 +18,7 @@ import {
 import { useCreateBookmarkMutation } from '../api/bookmark.api';
 import { useFileStore } from '@/features/file/store/file.store';
 import { NOTE_COLORS } from '@/shared/constants/color.constants';
-import { errorSizeBookmarkCreating } from '@/shared/utils/bookmark.utils';
+import { AppButton } from '@/shared/ui/AppButton/AppButton';
 
 interface ICreateBookmarkModalProps {
   open: boolean;
@@ -142,21 +141,26 @@ export const CreateBookmarkModal = ({
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={onClose} color='inherit' disabled={isCreating}>
-            Cancel
-          </Button>
-          <Button
+          <AppButton
+            label='Cancel'
+            onClick={onClose}
+            color='inherit'
+            disabled={isCreating}
+          />
+
+          <AppButton
+            label={
+              isCreating ? (
+                <CircularProgress size={24} color='inherit' />
+              ) : (
+                'Save Bookmark'
+              )
+            }
             type='submit'
             color='primary'
             variant='contained'
             disabled={isCreating}
-          >
-            {isCreating ? (
-              <CircularProgress size={24} color='inherit' />
-            ) : (
-              'Save Bookmark'
-            )}
-          </Button>
+          />
         </DialogActions>
       </form>
     </Dialog>

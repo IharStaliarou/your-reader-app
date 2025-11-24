@@ -1,12 +1,7 @@
-import {
-  Box,
-  Button,
-  ClickAwayListener,
-  Paper,
-  Typography,
-} from '@mui/material';
+import { Box, ClickAwayListener, Paper, Typography } from '@mui/material';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import type { CSSProperties } from 'react';
+import { AppButton } from '@/shared/ui/AppButton/AppButton';
 
 interface ISelectionTooltipProps {
   open: boolean;
@@ -42,17 +37,16 @@ export const SelectionTooltip = ({
             {tooltipText}
           </Typography>
           <Box className='flex gap-2'>
-            <Button onClick={onClose}>Cancel</Button>
-            <Button
+            <AppButton label='Cancel' onClick={onClose} />
+            <AppButton
+              label='Add to bookmarks'
               size='small'
               variant='contained'
               color='primary'
               onClick={onConfirm}
               startIcon={<BookmarkAddIcon />}
               fullWidth
-            >
-              Create Note
-            </Button>
+            />
           </Box>
         </Box>
       </Paper>
