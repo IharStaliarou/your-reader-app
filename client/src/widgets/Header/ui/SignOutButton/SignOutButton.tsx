@@ -1,22 +1,30 @@
-import { Button } from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
 
-import { useSignOutMutation } from '@/features/auth/api/auth.api';
+import {
+  AppButton,
+  type IAppButtonProps,
+} from '@/shared/ui/AppButton/AppButton';
 
-export const SignOutButton = () => {
-  const { mutate: signOut, isPending } = useSignOutMutation();
+interface ISignOutButtonProps extends IAppButtonProps {
+  isSigningOut: boolean;
+  onSignOut: () => void;
+}
 
-  const handleSignOut = () => {
-    signOut();
-  };
-
+export const SignOutButton = ({
+  isSigningOut,
+  onSignOut,
+  ...rest
+}: ISignOutButtonProps) => {
   return (
-    <Button
+    <AppButton
+      label='Sign out'
+      icon={<LogoutIcon />}
       variant='outlined'
-      onClick={handleSignOut}
-      disabled={isPending}
+      onClick={onSignOut}
       className='text-indigo-600 border-indigo-600 hover:bg-indigo-50'
-    >
-      {isPending ? 'Signing out...' : 'Sign out'}
-    </Button>
+      disabled={isSigningOut}
+      isLoading={isSigningOut}
+      {...rest}
+    />
   );
 };

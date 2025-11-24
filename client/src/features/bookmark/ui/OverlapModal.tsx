@@ -3,7 +3,6 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Button,
   Typography,
   Box,
   CircularProgress,
@@ -21,7 +20,7 @@ import {
   useCreateBookmarkMutation,
 } from '../api/bookmark.api';
 import { NOTE_COLORS } from '@/shared/constants/color.constants';
-import { errorSizeBookmarkCreating } from '@/shared/utils/bookmark.utils';
+import { AppButton } from '@/shared/ui/AppButton/AppButton';
 
 interface IOverlapModalProps {
   open: boolean;
@@ -161,23 +160,27 @@ export const OverlapModal = ({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose} color='inherit' disabled={isPending}>
-          Cancel (Exit)
-        </Button>
+        <AppButton
+          label='Cancel'
+          onClick={onClose}
+          color='inherit'
+          disabled={isPending}
+        />
 
-        <Button
+        <AppButton
+          label={
+            isPending ? (
+              <CircularProgress size={24} color='inherit' />
+            ) : (
+              'Delete All & Create New'
+            )
+          }
           onClick={handleForceCreate}
           color='error'
           variant='contained'
           disabled={isPending}
           sx={{ ml: 2 }}
-        >
-          {isPending ? (
-            <CircularProgress size={24} color='inherit' />
-          ) : (
-            'Delete All & Create New'
-          )}
-        </Button>
+        />
       </DialogActions>
     </Dialog>
   );

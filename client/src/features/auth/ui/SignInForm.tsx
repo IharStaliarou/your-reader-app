@@ -1,10 +1,11 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Box } from '@mui/material';
 
 import { SignInSchema, type ISignInData } from '../lib/validation';
 import { useSignInMutation } from '../api/auth.api';
 import { useNavigate } from 'react-router-dom';
+import { AppButton } from '@/shared/ui/AppButton/AppButton';
 
 export const SignInForm = () => {
   const navigate = useNavigate();
@@ -51,15 +52,14 @@ export const SignInForm = () => {
         helperText={errors.password?.message}
       />
 
-      <Button
+      <AppButton
+        label={isPending ? 'Signing in...' : 'Sign in'}
         type='submit'
         variant='contained'
         color='primary'
         disabled={isPending}
         className='mt-2 py-3'
-      >
-        {isPending ? 'Signing in...' : 'Sign in'}
-      </Button>
+      />
     </Box>
   );
 };

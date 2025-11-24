@@ -1,11 +1,12 @@
 import { useState, useCallback, useRef, type ChangeEvent } from 'react';
-import { Button, Box, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { toast } from 'react-toastify';
 
 import { useUploadFileMutation } from '../api/file.api';
 import { isAllowedFileType } from '@/shared/utils/file.utils';
 import { UploadStatus } from './UploadStatus';
+import { AppButton } from '@/shared/ui/AppButton/AppButton';
 
 export const FileUploadForm = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -60,24 +61,24 @@ export const FileUploadForm = () => {
         onChange={handleFileSelect}
         accept='.pdf,.txt'
       />
-      <Button
+      <AppButton
+        label={selectedFile ? selectedFile.name : 'Select File'}
         variant='outlined'
         startIcon={<UploadFileIcon />}
         fullWidth
         onClick={() => fileInputRef.current?.click()}
         className='mb-4'
-      >
-        {selectedFile ? selectedFile.name : 'Select File'}
-      </Button>
-      <Button
+      />
+      <AppButton
+        label={
+          isPending ? <CircularProgress size={24} color='inherit' /> : 'Upload'
+        }
         variant='contained'
         color='primary'
         fullWidth
         onClick={handleUpload}
         disabled={!selectedFile || isPending}
-      >
-        {isPending ? <CircularProgress size={24} color='inherit' /> : 'Upload'}
-      </Button>
+      />
 
       <UploadStatus
         isSuccess={isSuccess}

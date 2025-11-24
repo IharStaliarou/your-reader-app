@@ -192,9 +192,11 @@ export const FileContentViewer = ({
       sx={{
         p: 2,
         height: CONTENT_HEIGHT,
+        width: '1000px',
         overflowY: 'auto',
         backgroundColor: '#ffffff', // TODO: const or theme
         position: 'relative',
+        border: '1px solid #000',
       }}
     >
       {isLoading ? (

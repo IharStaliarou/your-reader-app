@@ -4,20 +4,18 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Button,
-  CircularProgress,
 } from '@mui/material';
-import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-import { useSignOutMutation } from '@/features/auth/api/auth.api';
 import { useAuthStore } from '@/features/auth/store/auth.store';
+import { useSignOutMutation } from '@/features/auth/api/auth.api';
+import { AuthActionButtons } from '@/widgets/Header/ui/AuthActionsButtons/AuthActionsButtons';
+import { SignOutButton } from '@/widgets/Header/ui/SignOutButton/SignOutButton';
 
 export const SidebarAuthSection = () => {
   const isSignedIn = useAuthStore((state) => state.isSignedIn);
   const isSigningOut = useAuthStore((state) => state.isSigningOut);
-
   const { mutate: signOut } = useSignOutMutation();
 
   const location = useLocation();
@@ -45,24 +43,11 @@ export const SidebarAuthSection = () => {
 
       {isSignedIn && (
         <div className='pt-4 border-t'>
-          <Button
-            fullWidth
-            variant='text'
-            color='error'
-            startIcon={
-              isSigningOut ? (
-                <CircularProgress size={20} color='inherit' />
-              ) : (
-                <LogoutIcon />
-              )
-            }
-            onClick={() => signOut()}
-            disabled={isSigningOut}
-            sx={{ mt: 1, justifyContent: 'flex-start', pl: 1.5 }}
-          >
-            {isSigningOut ? 'Signing out...' : 'Sign Out'}
-          </Button>
+          <SignOutButton isSigningOut={isSigningOut} onSignOut={signOut} />
         </div>
+      )}
+      {!isSignedIn && (
+        <AuthActionButtons isSignedIn={false} isHorizontal={false} />
       )}
     </List>
   );

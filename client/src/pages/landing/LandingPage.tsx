@@ -1,14 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 
-import { Header } from '@/widgets/Header/Header';
 import { TypewriterText } from '@shared/ui/TypewriterText';
+import { useAuthStore } from '@/features/auth/store/auth.store';
+import { AppButton } from '@/shared/ui/AppButton/AppButton';
+import { Footer } from '@/widgets/Footer/Footer';
+import { LinkButton } from '@/shared/ui/LinkButton/LinkButton';
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const { isSignedIn } = useAuthStore((state) => state);
   const [titleAnimationFinished, setTitleAnimationFinished] = useState(false);
-  const [descriptionAnimationFinished, setDescriptionAnimationFinished] =
+  const [_descriptionAnimationFinished, setDescriptionAnimationFinished] =
     useState(false);
   const handleTitleAnimationEnd = () => {
     setTitleAnimationFinished(true);
@@ -20,9 +24,7 @@ const LandingPage = () => {
 
   return (
     <Box className='min-h-screen flex flex-col bg-gray-50'>
-      <Header />
-
-      <Box className='flex-grow flex items-center justify-center p-8 text-center'>
+      <Box className='grow flex items-center justify-center p-8 text-center'>
         <Box className='max-w-4xl mx-auto'>
           <TypewriterText
             text='Save what matters most. Manage your notes.'
@@ -50,29 +52,27 @@ const LandingPage = () => {
             className={`transition-opacity duration-1000 opacity-100'
             }`}
           >
-            <Button
+            <LinkButton
+              label='Upload and read'
               variant='contained'
               size='large'
-              onClick={() => navigate('/upload')}
+              to='/upload'
               className='bg-green-600 hover:bg-green-700 py-3 px-8 text-lg shadow-xl mr-4'
-            >
-              Upload and read
-            </Button>
-            <Button
-              variant='outlined'
-              size='large'
-              onClick={() => navigate('/auth')}
-              className='text-indigo-600 border-indigo-600 hover:bg-indigo-50 py-3 px-8 text-lg'
-            >
-              Sign in for save notes
-            </Button>
+            />
+            {!isSignedIn && (
+              <AppButton
+                label='Sign in for save notes'
+                variant='outlined'
+                size='large'
+                onClick={() => navigate('/auth')}
+                className='text-indigo-600 border-indigo-600 hover:bg-indigo-50 py-3 px-8 text-lg'
+              />
+            )}
           </Box>
         </Box>
       </Box>
 
-      <Box className='p-4 text-center text-gray-500 text-sm border-t border-gray-100'>
-        © 2025 YOUR READER. All rights reserved.
-      </Box>
+      <Footer />
     </Box>
   );
 };
