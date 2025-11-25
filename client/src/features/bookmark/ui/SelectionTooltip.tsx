@@ -13,7 +13,7 @@ interface ISelectionTooltipProps {
 
 export const SelectionTooltip = ({
   open,
-  onClose, // TODO: create method for closing tooltip
+  onClose,
   onConfirm,
   position,
   tooltipText,

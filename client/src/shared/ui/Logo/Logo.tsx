@@ -1,4 +1,4 @@
-import { LinkButton } from './LinkButton/LinkButton';
+import { LinkButton } from '../LinkButton/LinkButton';
 
 export const Logo = () => {
   return (

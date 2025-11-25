@@ -9,7 +9,7 @@ interface IProtectedRouteProps {
 export const ProtectedRoute = ({
   redirectPath = '/auth',
 }: IProtectedRouteProps) => {
-  const isSignedIn = useAuthStore((state) => state.isSignedIn);
+  const { isSignedIn } = useAuthStore((state) => state);
   if (!isSignedIn) {
     return <Navigate to={redirectPath} replace />;
   }

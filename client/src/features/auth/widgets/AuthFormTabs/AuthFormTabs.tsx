@@ -19,12 +19,13 @@ export const AuthFormTabs = () => {
   };
 
   const handleSignUpSuccess = () => {
-    setMode('sign-up');
+    setMode('sign-in');
   };
 
   return (
     <Box className='flex flex-col items-center justify-center'>
       <Box className='mb-6'>
+        {/* TODO: create component */}
         <ToggleButtonGroup
           value={mode}
           exclusive
@@ -32,7 +33,6 @@ export const AuthFormTabs = () => {
           color='primary'
           className='bg-white rounded-full shadow-lg'
         >
-          {/* TODO: fix - two btn redirect to auth/signin */}
           <ToggleButton value='sign-in'>Sign in</ToggleButton>
           <ToggleButton value='sign-up'>Sign up</ToggleButton>
         </ToggleButtonGroup>

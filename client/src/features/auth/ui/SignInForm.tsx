@@ -1,10 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TextField, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 import { SignInSchema, type ISignInData } from '../lib/validation';
 import { useSignInMutation } from '../api/auth.api';
-import { useNavigate } from 'react-router-dom';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
 
 export const SignInForm = () => {
@@ -33,6 +33,7 @@ export const SignInForm = () => {
       onSubmit={handleSubmit(handleFormSubmit)}
       className='flex flex-col gap-4 p-6 bg-white shadow-xl rounded-lg w-full max-w-sm'
     >
+      {/* TODO: create component */}
       <TextField
         label='Username'
         variant='outlined'

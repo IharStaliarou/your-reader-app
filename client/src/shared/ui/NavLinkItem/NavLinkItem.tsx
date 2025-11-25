@@ -1,14 +1,14 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 
-import type { ISidebarLink } from '../../config/sidebar.config';
+import type { INavLinkItem } from '@/shared/config/navigation.config';
 
 interface ISidebarLinkItemProps {
-  link: ISidebarLink;
+  link: INavLinkItem;
   isHorizontal?: boolean;
 }
 
-export const SidebarLinkItem = ({
+export const NavLinkItem = ({
   link,
   isHorizontal = false,
 }: ISidebarLinkItemProps) => {

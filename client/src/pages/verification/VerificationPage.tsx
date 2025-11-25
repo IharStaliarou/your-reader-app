@@ -5,6 +5,7 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import { useVerifyMutation } from '@/features/auth/api/auth.api';
 import { type IVerifyResponse } from '@/shared/interfaces/auth.interface';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
+import { LinkButton } from '@/shared/ui/LinkButton/LinkButton';
 
 const VerificationPage = () => {
   const location = useLocation();
@@ -45,9 +46,9 @@ const VerificationPage = () => {
             🎉 Success!
           </Typography>
           <Typography variant='body1'>{data?.message}</Typography>
-          <AppButton
+          <LinkButton
             label='Sign in now'
-            onClick={() => navigate('/auth')}
+            to='/auth'
             variant='contained'
             className='mt-6 bg-indigo-600 hover:bg-indigo-700'
           />
