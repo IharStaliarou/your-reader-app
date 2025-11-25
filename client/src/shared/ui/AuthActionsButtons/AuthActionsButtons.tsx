@@ -22,7 +22,13 @@ export const AuthActionButtons = ({
   };
 
   if (isSignedIn) {
-    return <SignOutButton isSigningOut={isSigningOut} onSignOut={signOut} />;
+    return (
+      <SignOutButton
+        variant='outlined'
+        isLoading={isSigningOut}
+        onClick={() => signOut()}
+      />
+    );
   }
 
   return (

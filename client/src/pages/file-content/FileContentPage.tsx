@@ -21,7 +21,7 @@ export const FileContentPage = () => {
 
   const [scrollToCharFn, setScrollToCharFn] =
     useState<ScrollToCharFnType | null>(null);
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, _setActiveTab] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pendingScrollChar, setPendingScrollChar] = useState<number | null>(
     null
@@ -44,13 +44,7 @@ export const FileContentPage = () => {
     });
   }, [currentPage]);
 
-  const {
-    data: pageData,
-    isLoading: isLoadingContent,
-    isError: isErrorContent,
-    error: errorContent,
-    isFetching,
-  } = useGetFileContentQuery({
+  const { data: pageData, isFetching } = useGetFileContentQuery({
     fileId,
     page: currentPage,
     pageSize: PAGE_SIZE,
@@ -83,7 +77,7 @@ export const FileContentPage = () => {
     setScrollToCharFn(() => fn);
   }, []);
 
-  const handlePageChange = (event: ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (_event: ChangeEvent<unknown>, value: number) => {
     setCurrentPage(value);
   };
 

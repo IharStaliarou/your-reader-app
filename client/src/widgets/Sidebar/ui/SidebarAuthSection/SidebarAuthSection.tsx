@@ -10,8 +10,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import { useAuthStore } from '@/features/auth/store/auth.store';
 import { useSignOutMutation } from '@/features/auth/api/auth.api';
-import { AuthActionButtons } from '@/widgets/Header/ui/AuthActionsButtons/AuthActionsButtons';
-import { SignOutButton } from '@/widgets/Header/ui/SignOutButton/SignOutButton';
+import { AuthActionButtons } from '@/shared/ui/AuthActionsButtons/AuthActionsButtons';
+import { SignOutButton } from '@/shared/ui/SignOutButton/SignOutButton';
 
 export const SidebarAuthSection = () => {
   const isSignedIn = useAuthStore((state) => state.isSignedIn);
@@ -43,7 +43,11 @@ export const SidebarAuthSection = () => {
 
       {isSignedIn && (
         <div className='pt-4 border-t'>
-          <SignOutButton isSigningOut={isSigningOut} onSignOut={signOut} />
+          <SignOutButton
+            variant='outlined'
+            isLoading={isSigningOut}
+            onClick={() => signOut()}
+          />
         </div>
       )}
       {!isSignedIn && (

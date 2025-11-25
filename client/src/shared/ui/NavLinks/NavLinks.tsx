@@ -1,9 +1,6 @@
-import { SidebarLinkItem } from '@/widgets/Sidebar/ui/SidebarLinkItem/SidebarLinkItem';
-import {
-  protectedLinks,
-  publicLinks,
-} from '@/widgets/Sidebar/config/sidebar.config';
+import { protectedLinks, publicLinks } from '@/shared/config/navigation.config';
 import { useAuthStore } from '@/features/auth/store/auth.store';
+import { NavLinkItem } from '../NavLinkItem/NavLinkItem';
 
 export const NavLinks = () => {
   const isAuthenticated = useAuthStore((state) => state.isSignedIn);
@@ -15,7 +12,7 @@ export const NavLinks = () => {
   return (
     <>
       {visibleLinks.map((link) => (
-        <SidebarLinkItem key={link.to} link={link} isHorizontal={true} />
+        <NavLinkItem key={link.to} link={link} isHorizontal={true} />
       ))}
     </>
   );

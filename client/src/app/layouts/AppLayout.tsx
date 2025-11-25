@@ -10,7 +10,7 @@ export const AppLayout = () => {
 
   return (
     <div className='container mx-auto h-screen bg-gray-50 flex flex-col'>
-      <Header />
+      {isDesktop && <Header />}
       <div className='flex flex-1 overflow-hidden'>
         {isDesktop ? null : <Sidebar />}
         <main className='flex-1 overflow-y-auto p-8'>

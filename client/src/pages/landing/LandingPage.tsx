@@ -1,15 +1,12 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 
-import { TypewriterText } from '@shared/ui/TypewriterText';
+import { TypewriterText } from '@/shared/ui/TypewriterText/TypewriterText';
 import { useAuthStore } from '@/features/auth/store/auth.store';
-import { AppButton } from '@/shared/ui/AppButton/AppButton';
 import { Footer } from '@/widgets/Footer/Footer';
 import { LinkButton } from '@/shared/ui/LinkButton/LinkButton';
 
 const LandingPage = () => {
-  const navigate = useNavigate();
   const { isSignedIn } = useAuthStore((state) => state);
   const [titleAnimationFinished, setTitleAnimationFinished] = useState(false);
   const [_descriptionAnimationFinished, setDescriptionAnimationFinished] =
@@ -60,11 +57,11 @@ const LandingPage = () => {
               className='bg-green-600 hover:bg-green-700 py-3 px-8 text-lg shadow-xl mr-4'
             />
             {!isSignedIn && (
-              <AppButton
+              <LinkButton
                 label='Sign in for save notes'
                 variant='outlined'
                 size='large'
-                onClick={() => navigate('/auth')}
+                to='/auth'
                 className='text-indigo-600 border-indigo-600 hover:bg-indigo-50 py-3 px-8 text-lg'
               />
             )}

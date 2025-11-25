@@ -5,25 +5,14 @@ import {
   type IAppButtonProps,
 } from '@/shared/ui/AppButton/AppButton';
 
-interface ISignOutButtonProps extends IAppButtonProps {
-  isSigningOut: boolean;
-  onSignOut: () => void;
-}
+interface ISignOutButtonProps extends IAppButtonProps {}
 
-export const SignOutButton = ({
-  isSigningOut,
-  onSignOut,
-  ...rest
-}: ISignOutButtonProps) => {
+export const SignOutButton = ({ ...rest }: ISignOutButtonProps) => {
   return (
     <AppButton
       label='Sign out'
       icon={<LogoutIcon />}
-      variant='outlined'
-      onClick={onSignOut}
       className='text-indigo-600 border-indigo-600 hover:bg-indigo-50'
-      disabled={isSigningOut}
-      isLoading={isSigningOut}
       {...rest}
     />
   );

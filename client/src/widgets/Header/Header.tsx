@@ -1,10 +1,10 @@
 import { AppBar, Toolbar } from '@mui/material';
 
-import { Logo } from '@shared/ui/Logo';
+import { Logo } from '@/shared/ui/Logo/Logo';
 import { useAuthStore } from '@/features/auth/store/auth.store';
-import { AuthActionButtons } from './ui/AuthActionsButtons/AuthActionsButtons';
-import { NavLinks } from './ui/NavLinks/NavLinks';
-import { NavPanel } from './ui/NavPanel/NavPanel';
+import { AuthActionButtons } from '../../shared/ui/AuthActionsButtons/AuthActionsButtons';
+import { NavLinks } from '../../shared/ui/NavLinks/NavLinks';
+import { NavPanel } from '../../shared/ui/NavPanel/NavPanel';
 
 export const Header = () => {
   const isSignedIn = useAuthStore((state) => state.isSignedIn);
@@ -17,7 +17,7 @@ export const Header = () => {
     >
       <Toolbar className='flex justify-between'>
         <Logo />
-        <NavPanel children={<NavLinks />} />
+        <NavPanel className='flex w-auto sx:hidden' children={<NavLinks />} />
         <AuthActionButtons isSignedIn={isSignedIn} isHorizontal={true} />
       </Toolbar>
     </AppBar>

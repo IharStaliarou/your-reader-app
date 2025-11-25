@@ -37,6 +37,7 @@ export const SignUpForm = ({ onSuccess }: ISignUpFormProps) => {
       className='flex flex-col gap-4 p-6 bg-white shadow-xl rounded-lg w-full max-w-md'
     >
       <Box className='flex gap-4'>
+        {/* TODO: replace */}
         <TextField
           label='First name'
           variant='outlined'
