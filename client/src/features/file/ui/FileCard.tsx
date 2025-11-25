@@ -21,9 +21,7 @@ interface IFileCardProps {
 
 export const FileCard = ({ file, onDelete }: IFileCardProps) => {
   return (
-    // TODO: fix conflict
-    // @ts-ignore
-    <Grid item xs={12} sm={6} md={4} lg={3}>
+    <Grid>
       <Card
         variant='outlined'
         sx={{

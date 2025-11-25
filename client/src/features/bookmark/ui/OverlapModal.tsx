@@ -6,7 +6,6 @@ import {
   Typography,
   Box,
   CircularProgress,
-  TextField,
   Grid,
 } from '@mui/material';
 import { useState, useEffect } from 'react';
@@ -21,6 +20,7 @@ import {
 } from '../api/bookmark.api';
 import { NOTE_COLORS } from '@/shared/constants/color.constants';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
+import { CommonTextField } from '@/shared/ui/CommonTextField/CommonTextField';
 
 interface IOverlapModalProps {
   open: boolean;
@@ -76,13 +76,10 @@ export const OverlapModal = ({
           notes. You must resolve this conflict to proceed.
         </Typography>
 
-        <TextField
+        <CommonTextField
           autoFocus
-          margin='dense'
           label='New Note Title (Optional)'
           type='text'
-          fullWidth
-          variant='outlined'
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           disabled={isPending}

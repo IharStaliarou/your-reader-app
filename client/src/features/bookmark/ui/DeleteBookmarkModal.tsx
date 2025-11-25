@@ -5,7 +5,6 @@ import {
   DialogActions,
   Typography,
   Box,
-  CircularProgress,
 } from '@mui/material';
 
 import { type IBookmark } from '@/shared/interfaces/bookmark.interface';
@@ -81,13 +80,8 @@ export const DeleteBookmarkModal = ({
         />
 
         <AppButton
-          label={
-            isDeleting ? (
-              <CircularProgress size={24} color='inherit' />
-            ) : (
-              'Delete'
-            )
-          }
+          label={isDeleting ? 'Deleting...' : 'Delete'}
+          isLoading={isDeleting}
           onClick={handleDelete}
           color='error'
           variant='contained'

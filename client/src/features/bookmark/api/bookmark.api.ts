@@ -16,6 +16,7 @@ import {
   fetchFileBookmarks,
 } from './bookmark.methods';
 import { BOOKMARK_QUERY_KEYS } from '@/shared/constants/queryKeys.constants';
+import { BOOKMARK_CACHE_TIME_MS } from '@/shared/constants/bookmark.constants';
 
 export const useGetFileBookmarksQuery = () => {
   const fileId = useFileStore((state) => state.activeFileId);
@@ -25,7 +26,7 @@ export const useGetFileBookmarksQuery = () => {
     queryKey: BOOKMARK_QUERY_KEYS.fileBookmarks(fileId || 'null'),
     queryFn: () => fetchFileBookmarks(fileId!),
     enabled: !!fileId,
-    staleTime: 60 * 1000, // TODO: constant ?!
+    staleTime: BOOKMARK_CACHE_TIME_MS,
     refetchOnWindowFocus: false,
   });
 

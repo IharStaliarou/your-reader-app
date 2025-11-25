@@ -13,6 +13,7 @@ import {
 import type {
   IAuthResponse,
   ISignUpResponse,
+  IVerifyResponse,
 } from '@shared/interfaces/auth.interface';
 import { extractErrorMessage } from '@/shared/utils/error.utils';
 import { useAuthStore } from '../store/auth.store';
@@ -109,8 +110,8 @@ export const useSignOutMutation = () => {
   });
 };
 
-export const useVerifyMutation = () => {
-  return useMutation({
+export const useVerifyMutation = <T = IVerifyResponse>() => {
+  return useMutation<T, AxiosError<any>, string>({
     mutationFn: verifyEmail,
     onError: (error: any) => {
       console.error('Verification error:', error);

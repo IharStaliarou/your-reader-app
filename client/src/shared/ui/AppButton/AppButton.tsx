@@ -25,16 +25,12 @@ export const AppButton = ({
 
   return (
     <Button disabled={isDisabled} className={className} sx={sx} {...rest}>
-      {isLoading ? (
-        <>
-          <CircularProgress size={20} color='inherit' sx={{ mr: 1 }} />
-          {loadingText}
-        </>
-      ) : (
-        <span className='flex gap-2'>
-          {icon} {label} {children}
-        </span>
+      {isLoading && (
+        <CircularProgress size={20} color='inherit' className='mr-2' />
       )}
+      <span className='flex gap-2'>
+        {icon} {label} {children}
+      </span>
     </Button>
   );
 };
