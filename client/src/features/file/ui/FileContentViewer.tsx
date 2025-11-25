@@ -87,10 +87,11 @@ export const FileContentViewer = ({
 
   const isTokenSelected = useCallback(
     (tokenIndex: number) => {
-      if (wordSelection.startTokenIndex === null) return false;
+      const { startTokenIndex, endTokenIndex } = wordSelection;
+      if (startTokenIndex === null) return false;
 
-      const start = wordSelection.startTokenIndex;
-      const end = wordSelection.endTokenIndex!; // TODO: fix type conflict
+      const start: number = startTokenIndex;
+      const end: number = endTokenIndex === null ? start : endTokenIndex;
 
       return (
         tokenIndex >= Math.min(start, end) && tokenIndex <= Math.max(start, end)

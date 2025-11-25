@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, type ChangeEvent } from 'react';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { toast } from 'react-toastify';
 
@@ -70,9 +70,8 @@ export const FileUploadForm = () => {
         className='mb-4'
       />
       <AppButton
-        label={
-          isPending ? <CircularProgress size={24} color='inherit' /> : 'Upload'
-        }
+        label={isPending ? 'Uploading...' : 'Upload'}
+        isLoading={isPending}
         variant='contained'
         color='primary'
         fullWidth

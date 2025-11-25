@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 
-import { AuthFormTabs } from '@features/auth/widgets/AuthFormTabs/AuthFormTabs';
+import { AuthFormTabs } from '@/features/auth/ui/AuthFormTabs/AuthFormTabs';
 
 const AuthPage = () => {
   return (

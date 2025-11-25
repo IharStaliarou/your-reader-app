@@ -1,18 +1,19 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TextField, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-import { SignInSchema, type ISignInData } from '../lib/validation';
-import { useSignInMutation } from '../api/auth.api';
+import { SignInSchema, type ISignInData } from '../../lib/validation';
+import { useSignInMutation } from '../../api/auth.api';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
+import { ControlledTextField } from '@/shared/ui/ControlledTextField/ControlledTextField';
 
 export const SignInForm = () => {
   const navigate = useNavigate();
   const { mutate: signInMutate, isPending } = useSignInMutation();
 
   const {
-    register,
+    register: signIn,
     handleSubmit,
     formState: { errors },
   } = useForm<ISignInData>({
@@ -33,28 +34,28 @@ export const SignInForm = () => {
       onSubmit={handleSubmit(handleFormSubmit)}
       className='flex flex-col gap-4 p-6 bg-white shadow-xl rounded-lg w-full max-w-sm'
     >
-      {/* TODO: create component */}
-      <TextField
+      <ControlledTextField
+        register={signIn}
         label='Username'
         variant='outlined'
         fullWidth
-        {...register('userName')}
-        error={!!errors.userName}
-        helperText={errors.userName?.message}
+        {...signIn('userName')}
+        errors={errors}
       />
 
-      <TextField
+      <ControlledTextField
+        register={signIn}
         label='Password'
         variant='outlined'
         type='password'
         fullWidth
-        {...register('password')}
-        error={!!errors.password}
-        helperText={errors.password?.message}
+        {...signIn('password')}
+        errors={errors}
       />
 
       <AppButton
         label={isPending ? 'Signing in...' : 'Sign in'}
+        isLoading={isPending}
         type='submit'
         variant='contained'
         color='primary'

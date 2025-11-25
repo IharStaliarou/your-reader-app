@@ -4,10 +4,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
   Box,
   Typography,
-  CircularProgress,
   Grid,
 } from '@mui/material';
 
@@ -19,6 +17,7 @@ import { useCreateBookmarkMutation } from '../api/bookmark.api';
 import { useFileStore } from '@/features/file/store/file.store';
 import { NOTE_COLORS } from '@/shared/constants/color.constants';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
+import { CommonTextField } from '@/shared/ui/CommonTextField/CommonTextField';
 
 interface ICreateBookmarkModalProps {
   open: boolean;
@@ -76,13 +75,10 @@ export const CreateBookmarkModal = ({
 
       <form onSubmit={handleSubmit}>
         <DialogContent dividers>
-          <TextField
+          <CommonTextField
             autoFocus
-            margin='dense'
             label='Title (Optional)'
             type='text'
-            fullWidth
-            variant='outlined'
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             disabled={isCreating}
@@ -149,13 +145,8 @@ export const CreateBookmarkModal = ({
           />
 
           <AppButton
-            label={
-              isCreating ? (
-                <CircularProgress size={24} color='inherit' />
-              ) : (
-                'Save Bookmark'
-              )
-            }
+            label='Save Bookmark'
+            isLoading={isCreating}
             type='submit'
             color='primary'
             variant='contained'

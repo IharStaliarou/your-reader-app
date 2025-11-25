@@ -11,8 +11,6 @@ const VerificationPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { mutate, isPending, isSuccess, data, isError, error } =
-    // TODO: resolve conflict
-    // @ts-ignore
     useVerifyMutation<IVerifyResponse>();
 
   useEffect(() => {

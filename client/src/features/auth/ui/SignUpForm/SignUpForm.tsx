@@ -1,10 +1,11 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TextField, Box } from '@mui/material';
+import { Box } from '@mui/material';
 
-import { SignUpSchema, type ISignUpData } from '../lib/validation';
-import { useSignUpMutation } from '../api/auth.api';
+import { SignUpSchema, type ISignUpData } from '../../lib/validation';
+import { useSignUpMutation } from '../../api/auth.api';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
+import { ControlledTextField } from '@/shared/ui/ControlledTextField/ControlledTextField';
 
 interface ISignUpFormProps {
   onSuccess: () => void;
@@ -37,71 +38,70 @@ export const SignUpForm = ({ onSuccess }: ISignUpFormProps) => {
       className='flex flex-col gap-4 p-6 bg-white shadow-xl rounded-lg w-full max-w-md'
     >
       <Box className='flex gap-4'>
-        {/* TODO: replace */}
-        <TextField
+        <ControlledTextField
+          register={signUp}
           label='First name'
           variant='outlined'
           fullWidth
           {...signUp('firstName')}
-          error={!!errors.firstName}
-          helperText={errors.firstName?.message}
+          errors={errors}
         />
-        <TextField
+        <ControlledTextField
+          register={signUp}
           label='Last name'
           variant='outlined'
           fullWidth
           {...signUp('lastName')}
-          error={!!errors.lastName}
-          helperText={errors.lastName?.message}
+          errors={errors}
         />
       </Box>
 
-      <TextField
+      <ControlledTextField
+        register={signUp}
         label='Username'
         variant='outlined'
         fullWidth
         {...signUp('userName')}
-        error={!!errors.userName}
-        helperText={errors.userName?.message}
+        errors={errors}
       />
 
       <Box className='flex gap-4'>
-        <TextField
+        <ControlledTextField
+          register={signUp}
           label='Email'
           variant='outlined'
           type='email'
           fullWidth
           {...signUp('email')}
-          error={!!errors.email}
-          helperText={errors.email?.message}
+          errors={errors}
         />
-        <TextField
+        <ControlledTextField
+          register={signUp}
           label='Phone (+375XXXXXXXXX)'
           variant='outlined'
           fullWidth
           {...signUp('phone')}
-          error={!!errors.phone}
-          helperText={errors.phone?.message}
+          errors={errors}
         />
       </Box>
 
-      <TextField
+      <ControlledTextField
+        register={signUp}
         label='Password'
         variant='outlined'
         type='password'
         fullWidth
         {...signUp('password')}
-        error={!!errors.password}
-        helperText={errors.password?.message}
+        errors={errors}
       />
-      <TextField
+      <ControlledTextField
+        register={signUp}
         label='Repeat password'
         variant='outlined'
         type='password'
         fullWidth
         {...signUp('repeatPassword')}
-        error={!!errors.repeatPassword}
-        helperText={errors.repeatPassword?.message}
+        errors={errors}
       />
 
       <AppButton
