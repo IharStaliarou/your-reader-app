@@ -1,20 +1,37 @@
-import { useState } from 'react';
 import { Box } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { TabSwitcher, type AuthMode } from '../TabSwitcher/TabSwitcher';
+import { TabSwitcher } from '../TabSwitcher/TabSwitcher';
 import { AuthForms } from '../AuthForms/AuthForms';
+import {
+  APP_PATHS,
+  AUTH_TYPES,
+  type AuthModeType,
+} from '@/shared/constants/api.constants';
+import { getInitialAuthMode } from '@/shared/utils/auth.utils';
 
 export const AuthFormTabs = () => {
-  const [mode, setMode] = useState<AuthMode>('sign-in');
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const currentMode = getInitialAuthMode(location.pathname);
+
+  const handleModeChange = (newMode: AuthModeType) => {
+    const path =
+      newMode === AUTH_TYPES.SIGN_IN
+        ? APP_PATHS.AUTH.SIGN_IN
+        : APP_PATHS.AUTH.SIGN_UP;
+    navigate(path);
+  };
 
   const handleSignUpSuccess = () => {
-    setMode('sign-in');
+    navigate(APP_PATHS.AUTH.SIGN_IN);
   };
 
   return (
     <Box className='flex flex-col items-center justify-center'>
-      <TabSwitcher mode={mode} onModeChange={setMode} />
-      <AuthForms mode={mode} onSignUpSuccess={handleSignUpSuccess} />
+      <TabSwitcher mode={currentMode} onModeChange={handleModeChange} />
+      <AuthForms mode={currentMode} onSignUpSuccess={handleSignUpSuccess} />
     </Box>
   );
 };

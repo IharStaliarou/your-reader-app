@@ -4,6 +4,7 @@ import { useSignOutMutation } from '@/features/auth/api/auth.api';
 
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
 import { SignOutButton } from '../SignOutButton/SignOutButton';
+import { APP_PATHS } from '@/shared/constants/api.constants';
 
 interface IAuthActionButtonsProps {
   isSignedIn: boolean;
@@ -39,7 +40,7 @@ export const AuthActionButtons = ({
       <AppButton
         label='Sign in'
         variant='outlined'
-        onClick={() => handleNavigate('/auth')}
+        onClick={() => handleNavigate(APP_PATHS.AUTH.SIGN_IN)}
         className='text-indigo-600 border-indigo-600 hover:bg-indigo-50'
         sx={{ width: isHorizontal ? 'auto' : '100%' }}
       />
@@ -47,7 +48,7 @@ export const AuthActionButtons = ({
       <AppButton
         label='Sign up'
         variant='contained'
-        onClick={() => handleNavigate('/auth')}
+        onClick={() => handleNavigate(APP_PATHS.AUTH.SIGN_UP)}
         className='bg-indigo-600 hover:bg-indigo-700 shadow-md'
         sx={{ width: isHorizontal ? 'auto' : '100%' }}
       />

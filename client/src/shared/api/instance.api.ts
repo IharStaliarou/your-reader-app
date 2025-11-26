@@ -1,9 +1,6 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
-import {
-  API_BASE_URL,
-  API_REFRESH_TOKENS_URL,
-} from '@/shared/constants/api.constants';
+import { API_BASE_URL, API_ENDPOINTS } from '@/shared/constants/api.constants';
 import { signOutCleanupGlobal } from '@/features/auth/store/auth.store';
 
 interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
@@ -39,7 +36,8 @@ $api.interceptors.response.use(
   (config) => config,
   async (error: AxiosError) => {
     const originalRequest = error.config as CustomAxiosRequestConfig;
-    const isRefreshEndpoint = originalRequest.url === API_REFRESH_TOKENS_URL;
+    const isRefreshEndpoint =
+      originalRequest.url === API_ENDPOINTS.TOKENS.REFRESH;
 
     if (
       error.response &&
@@ -52,7 +50,7 @@ $api.interceptors.response.use(
       if (!isRefreshing) {
         isRefreshing = true;
         try {
-          const response = await $api.get(`${API_REFRESH_TOKENS_URL}`);
+          const response = await $api.get(API_ENDPOINTS.TOKENS.REFRESH);
           const newAccessToken = response.data.accessToken;
 
           localStorage.setItem('accessToken', newAccessToken);

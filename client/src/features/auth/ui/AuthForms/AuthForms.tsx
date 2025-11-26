@@ -1,14 +1,17 @@
+import {
+  AUTH_TYPES,
+  type AuthModeType,
+} from '@/shared/constants/api.constants';
 import { SignInForm } from '../SignInForm/SignInForm';
 import { SignUpForm } from '../SignUpForm/SignUpForm';
-import type { AuthMode } from '../TabSwitcher/TabSwitcher';
 
 interface IAuthFormsProps {
-  mode: AuthMode;
+  mode: AuthModeType;
   onSignUpSuccess: () => void;
 }
 
 export const AuthForms = ({ mode, onSignUpSuccess }: IAuthFormsProps) => {
-  return mode === 'sign-in' ? (
+  return mode === AUTH_TYPES.SIGN_IN ? (
     <SignInForm />
   ) : (
     <SignUpForm onSuccess={onSignUpSuccess} />

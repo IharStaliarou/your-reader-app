@@ -1,8 +1,4 @@
-import {
-  API_BOOKMARKS_URL,
-  API_GET_BOOKMARKS_BY_FILE_URL,
-  API_DELETE_BOOKMARK_URL,
-} from '@/shared/constants/api.constants';
+import { API_ENDPOINTS } from '@/shared/constants/api.constants';
 import { $api } from '@/shared/api/instance.api';
 import type {
   IBookmark,
@@ -13,7 +9,7 @@ export const fetchFileBookmarks = async (
   fileId: string
 ): Promise<IBookmark[]> => {
   const response = await $api.get<IBookmark[]>(
-    API_GET_BOOKMARKS_BY_FILE_URL(fileId)
+    API_ENDPOINTS.BOOKMARKS.GET_ALL_BY_FILE(fileId)
   );
   return response.data;
 };
@@ -21,7 +17,10 @@ export const fetchFileBookmarks = async (
 export const createBookmark = async (
   dto: ICreateBookmarkDto
 ): Promise<IBookmark> => {
-  const response = await $api.post<IBookmark>(API_BOOKMARKS_URL, dto);
+  const response = await $api.post<IBookmark>(
+    API_ENDPOINTS.BOOKMARKS.BASE,
+    dto
+  );
   return response.data;
 };
 
@@ -29,7 +28,7 @@ export const deleteBookmark = async (
   bookmarkId: string
 ): Promise<{ message: string }> => {
   const response = await $api.delete<{ message: string }>(
-    API_DELETE_BOOKMARK_URL(bookmarkId)
+    API_ENDPOINTS.BOOKMARKS.DELETE(bookmarkId)
   );
   return response.data;
 };

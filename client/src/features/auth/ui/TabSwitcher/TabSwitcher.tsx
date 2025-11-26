@@ -1,17 +1,20 @@
-import { ToggleButton, ToggleButtonGroup, Box } from '@mui/material';
 import type { MouseEvent } from 'react';
+import { ToggleButton, ToggleButtonGroup, Box } from '@mui/material';
 
-export type AuthMode = 'sign-in' | 'sign-up';
+import {
+  AUTH_TYPES,
+  type AuthModeType,
+} from '@/shared/constants/api.constants';
 
 interface ITabSwitcherProps {
-  mode: AuthMode;
-  onModeChange: (mode: AuthMode) => void;
+  mode: AuthModeType;
+  onModeChange: (mode: AuthModeType) => void;
 }
 
 export const TabSwitcher = ({ mode, onModeChange }: ITabSwitcherProps) => {
   const handleChange = (
     _event: MouseEvent<HTMLElement>,
-    newMode: AuthMode | null
+    newMode: AuthModeType | null
   ) => {
     if (newMode !== null) {
       onModeChange(newMode);
@@ -27,8 +30,8 @@ export const TabSwitcher = ({ mode, onModeChange }: ITabSwitcherProps) => {
         color='primary'
         className='bg-white rounded-full shadow-lg'
       >
-        <ToggleButton value='sign-in'>Sign in</ToggleButton>
-        <ToggleButton value='sign-up'>Sign up</ToggleButton>
+        <ToggleButton value={AUTH_TYPES.SIGN_IN}>Sign in</ToggleButton>
+        <ToggleButton value={AUTH_TYPES.SIGN_UP}>Sign up</ToggleButton>
       </ToggleButtonGroup>
     </Box>
   );

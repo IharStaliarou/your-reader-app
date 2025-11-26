@@ -7,6 +7,7 @@ import { SignInSchema, type ISignInData } from '../../lib/validation';
 import { useSignInMutation } from '../../api/auth.api';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
 import { ControlledTextField } from '@/shared/ui/ControlledTextField/ControlledTextField';
+import { APP_PATHS } from '@/shared/constants/api.constants';
 
 export const SignInForm = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export const SignInForm = () => {
   const handleFormSubmit = (data: ISignInData) => {
     signInMutate(data, {
       onSuccess: () => {
-        navigate('/profile');
+        navigate(APP_PATHS.PROFILE);
       },
     });
   };

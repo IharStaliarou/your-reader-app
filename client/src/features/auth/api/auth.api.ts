@@ -17,6 +17,7 @@ import type {
 } from '@shared/interfaces/auth.interface';
 import { extractErrorMessage } from '@/shared/utils/error.utils';
 import { useAuthStore } from '../store/auth.store';
+import { APP_PATHS } from '@/shared/constants/api.constants';
 
 export const useSignInMutation = () => {
   const setIsSignedIn = useAuthStore((state) => state.setIsSignedIn);
@@ -94,7 +95,7 @@ export const useSignOutMutation = () => {
       finishSignOut();
       queryClient.clear();
       toast.success('You have successfully signed out.');
-      navigate('/');
+      navigate(APP_PATHS.HOME);
     },
     onError: (error: AxiosError<any>) => {
       const { setIsSignedIn, finishSignOut } = useAuthStore.getState();
@@ -104,7 +105,7 @@ export const useSignOutMutation = () => {
       finishSignOut();
       queryClient.clear();
       toast.error('Failed to sign out. Local session cleared.');
-      navigate('/');
+      navigate(APP_PATHS.HOME);
       return Promise.reject(error);
     },
   });
