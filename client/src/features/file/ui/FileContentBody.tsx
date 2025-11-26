@@ -1,10 +1,12 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import { useGetFileBookmarksQuery } from '@/features/bookmark/api/bookmark.api';
 import { useFilePagination } from '@/features/file/hooks/useFilePagination';
 import { AppPagination } from '@/shared/ui/AppPagination/AppPagination';
 import { FileContentViewer } from '@/features/file/ui/FileContentViewer';
 import { BookmarksList } from '@/features/bookmark/ui/BookmarksList';
+import { useGetUserFilesQuery } from '../api/file.api';
+import { getCurrentFile, getFileTitle } from '@/shared/utils/file.utils';
 
 interface IFileContentBodyProps {
   fileId: string;
@@ -12,6 +14,8 @@ interface IFileContentBodyProps {
 
 export const FileContentBody = ({ fileId }: IFileContentBodyProps) => {
   useGetFileBookmarksQuery();
+  const { data: filesData } = useGetUserFilesQuery();
+  const currentFile = getCurrentFile(filesData, fileId);
 
   const {
     currentPage,
@@ -26,6 +30,8 @@ export const FileContentBody = ({ fileId }: IFileContentBodyProps) => {
 
   return (
     <Box>
+      <Typography variant='h4'>{getFileTitle(currentFile)}</Typography>
+
       <AppPagination
         currentPage={currentPage}
         totalPages={totalPages}

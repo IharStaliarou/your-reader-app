@@ -3,11 +3,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 import {
-  API_UPLOAD_FILE_URL,
-  API_GET_FILES_URL,
   MULTER_FIELD_NAME,
-  API_GET_FILE_CONTENT_URL,
-  API_DELETE_FILE_URL,
+  API_ENDPOINTS,
 } from '@/shared/constants/api.constants';
 import { $api } from '@/shared/api/instance.api';
 import { FIVE_MINUTES_MS } from '@/shared/constants/time.constants';
@@ -29,7 +26,7 @@ const uploadFile = async ({
   formData.append(MULTER_FIELD_NAME, file);
 
   const response = await $api.post<IFileUploadResponse>(
-    API_UPLOAD_FILE_URL,
+    API_ENDPOINTS.FILES.UPLOAD,
     formData,
     {
       headers: {
@@ -42,13 +39,13 @@ const uploadFile = async ({
 
 const deleteFile = async (fileId: string): Promise<{ message: string }> => {
   const response = await $api.delete<{ message: string }>(
-    API_DELETE_FILE_URL(fileId)
+    API_ENDPOINTS.FILES.DELETE(fileId)
   );
   return response.data;
 };
 
 const fetchUserFiles = async (): Promise<IFilesResponse> => {
-  const response = await $api.get(`${API_GET_FILES_URL}`);
+  const response = await $api.get(API_ENDPOINTS.FILES.GET_ALL_BY_USER);
   return response.data;
 };
 
@@ -64,7 +61,9 @@ const fetchFileContent = async ({
   pageSize,
 }: IFileContentPageParams): Promise<IFilePageContent> => {
   const response = await $api.get<IFilePageContent>(
-    `${API_GET_FILE_CONTENT_URL(fileId)}?page=${page}&pageSize=${pageSize}`
+    `${API_ENDPOINTS.FILES.GET_FILE_CONTENT(
+      fileId
+    )}?page=${page}&pageSize=${pageSize}`
   );
   return response.data;
 };

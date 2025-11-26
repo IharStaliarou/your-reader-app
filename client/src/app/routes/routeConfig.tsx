@@ -1,7 +1,10 @@
 import { ProtectedRoute } from './ProtectedRoute';
 import { AppLayout } from '../layouts/AppLayout';
 import { type IAppRoute } from '@/shared/interfaces/routes.interface';
-import { AppRoutePaths } from '@/shared/constants/routes.constants';
+import {
+  AppRoutePaths,
+  RouteGroupIds,
+} from '@/shared/constants/routes.constants';
 import LandingPage from '@pages/landing/LandingPage';
 import AuthPage from '@pages/auth/AuthPage';
 import VerificationPage from '@pages/verification/VerificationPage';
@@ -11,7 +14,7 @@ import { FileContentPage } from '@/pages/file-content/FileContentPage';
 
 export const routeConfig: IAppRoute[] = [
   {
-    id: 'main_layout',
+    id: RouteGroupIds.MAIN_LAYOUT,
     path: AppRoutePaths.ROOT.path,
     element: <AppLayout />,
     children: [
@@ -25,6 +28,18 @@ export const routeConfig: IAppRoute[] = [
         id: AppRoutePaths.AUTH.id,
         path: AppRoutePaths.AUTH.path,
         element: <AuthPage />,
+        children: [
+          {
+            id: AppRoutePaths.AUTH.SIGN_IN.id,
+            path: AppRoutePaths.AUTH.SIGN_IN.path,
+            element: <AuthPage />,
+          },
+          {
+            id: AppRoutePaths.AUTH.SIGN_UP.id,
+            path: AppRoutePaths.AUTH.SIGN_UP.path,
+            element: <AuthPage />,
+          },
+        ],
       },
       {
         id: AppRoutePaths.VERIFY.id,
@@ -48,7 +63,7 @@ export const routeConfig: IAppRoute[] = [
       },
       // ===PROTECTED ROUTES===
       {
-        id: 'protected_group',
+        id: RouteGroupIds.PROTECTED_GROUP,
         path: AppRoutePaths.ROOT.path,
         element: <ProtectedRoute />,
         children: [

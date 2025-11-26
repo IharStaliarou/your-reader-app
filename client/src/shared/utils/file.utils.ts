@@ -11,6 +11,17 @@ export const isAllowedFileType = (file: File): boolean => {
 };
 
 /**
+ * Get array of uploaded files
+ * @param filesData response from server
+ * @returns Array of files
+ */
+export const getUploadedFilesArray = (
+  filesData: IFilesResponse | undefined
+): IFile[] => {
+  return filesData?.files || [];
+};
+
+/**
  * Get current file by id
  * @param filesData Array of files
  * @param fileId File id to find
@@ -21,7 +32,7 @@ export const getCurrentFile = (
   fileId: string | undefined
 ) => {
   if (!filesData) return null;
-  return filesData?.files.find((f) => f.id === fileId);
+  return getUploadedFilesArray(filesData).find((f) => f.id === fileId);
 };
 
 /**

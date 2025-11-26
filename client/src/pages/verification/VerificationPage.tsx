@@ -6,6 +6,7 @@ import { useVerifyMutation } from '@/features/auth/api/auth.api';
 import { type IVerifyResponse } from '@/shared/interfaces/auth.interface';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
 import { LinkButton } from '@/shared/ui/LinkButton/LinkButton';
+import { APP_PATHS } from '@/shared/constants/api.constants';
 
 const VerificationPage = () => {
   const location = useLocation();
@@ -20,7 +21,7 @@ const VerificationPage = () => {
     if (token) {
       mutate(token);
     } else {
-      navigate('/auth', {
+      navigate(APP_PATHS.AUTH.SIGN_UP, {
         replace: true,
         state: { message: 'Verification token not found' },
       });
@@ -67,7 +68,7 @@ const VerificationPage = () => {
           <Typography variant='body1'>{errorMessage}</Typography>
           <AppButton
             label='Back to main page'
-            onClick={() => navigate('/')}
+            onClick={() => navigate(APP_PATHS.HOME)}
             variant='outlined'
             className='mt-6 text-indigo-600 border-indigo-600'
           />
