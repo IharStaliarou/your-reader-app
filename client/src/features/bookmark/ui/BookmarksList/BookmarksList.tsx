@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Box,
   Typography,
@@ -10,10 +11,9 @@ import {
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { useBookmarkStore } from '../store/bookmark.store';
-import { useDeleteBookmarkMutation } from '../api/bookmark.api';
-import { DeleteBookmarkModal } from './DeleteBookmarkModal';
-import { useState } from 'react';
+import { useBookmarkStore } from '../../store/bookmark.store';
+import { useDeleteBookmarkMutation } from '../../api/bookmark.api';
+import { DeleteBookmarkModal } from '../DeleteBookmarkModal/DeleteBookmarkModal';
 import type { IBookmark } from '@/shared/interfaces/bookmark.interface';
 
 interface IBookmarksListProps {

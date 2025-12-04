@@ -10,14 +10,14 @@ import {
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 
+import {
+  useDeleteBookmarkMutation,
+  useCreateBookmarkMutation,
+} from '../../api/bookmark.api';
 import type {
   IBookmark,
   ICreateBookmarkInitialData,
 } from '@/shared/interfaces/bookmark.interface';
-import {
-  useDeleteBookmarkMutation,
-  useCreateBookmarkMutation,
-} from '../api/bookmark.api';
 import { NOTE_COLORS } from '@/shared/constants/color.constants';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
 import { CommonTextField } from '@/shared/ui/CommonTextField/CommonTextField';

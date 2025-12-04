@@ -9,9 +9,10 @@ import { ControlledTextField } from '@/shared/ui/ControlledTextField/ControlledT
 
 interface ISignUpFormProps {
   onSuccess: () => void;
+  className?: string;
 }
 
-export const SignUpForm = ({ onSuccess }: ISignUpFormProps) => {
+export const SignUpForm = ({ onSuccess, className }: ISignUpFormProps) => {
   const { mutate: signUpMutate, isPending } = useSignUpMutation();
 
   const {
@@ -35,7 +36,7 @@ export const SignUpForm = ({ onSuccess }: ISignUpFormProps) => {
     <Box
       component='form'
       onSubmit={handleSubmit(handleFormSubmit)}
-      className='flex flex-col gap-4 p-6 bg-white shadow-xl rounded-lg w-full max-w-md'
+      className={`flex flex-col gap-4 p-6 bg-white shadow-xl rounded-[26px] ${className}`}
     >
       <Box className='flex gap-4'>
         <ControlledTextField

@@ -9,11 +9,13 @@ import { APP_PATHS } from '@/shared/constants/api.constants';
 interface IAuthActionButtonsProps {
   isSignedIn: boolean;
   isHorizontal?: boolean;
+  className?: string;
 }
 
 export const AuthActionButtons = ({
   isSignedIn,
   isHorizontal = true,
+  className,
 }: IAuthActionButtonsProps) => {
   const navigate = useNavigate();
   const { mutate: signOut, isPending: isSigningOut } = useSignOutMutation();
@@ -34,23 +36,24 @@ export const AuthActionButtons = ({
 
   return (
     <Box
-      className={isHorizontal ? 'space-x-4' : 'flex  space-y-2'}
+      className={`flex ${className} ${
+        isHorizontal ? ' gap-2' : 'flex-col gap-2'
+      }`}
       sx={{ width: isHorizontal ? 'auto' : '100%' }}
     >
       <AppButton
         label='Sign in'
         variant='outlined'
         onClick={() => handleNavigate(APP_PATHS.AUTH.SIGN_IN)}
-        className='text-indigo-600 border-indigo-600 hover:bg-indigo-50'
-        sx={{ width: isHorizontal ? 'auto' : '100%' }}
+        isHorizontal={isHorizontal}
       />
 
       <AppButton
         label='Sign up'
         variant='contained'
         onClick={() => handleNavigate(APP_PATHS.AUTH.SIGN_UP)}
-        className='bg-indigo-600 hover:bg-indigo-700 shadow-md'
-        sx={{ width: isHorizontal ? 'auto' : '100%' }}
+        className='shadow-md'
+        isHorizontal={isHorizontal}
       />
     </Box>
   );

@@ -1,75 +1,38 @@
-import { useState } from 'react';
 import { Box } from '@mui/material';
 
-import { TypewriterText } from '@/shared/ui/TypewriterText/TypewriterText';
 import { useAuthStore } from '@/features/auth/store/auth.store';
-import { Footer } from '@/widgets/Footer/Footer';
 import { LinkButton } from '@/shared/ui/LinkButton/LinkButton';
+import { AnimationText } from './components/AnimationText/AnimationText';
 
 const LandingPage = () => {
   const { isSignedIn } = useAuthStore((state) => state);
-  const [titleAnimationFinished, setTitleAnimationFinished] = useState(false);
-  const [_descriptionAnimationFinished, setDescriptionAnimationFinished] =
-    useState(false);
-  const handleTitleAnimationEnd = () => {
-    setTitleAnimationFinished(true);
-  };
-
-  const handleDescriptionAnimationEnd = () => {
-    setDescriptionAnimationFinished(true);
-  };
 
   return (
-    <Box className='min-h-screen flex flex-col bg-gray-50'>
+    <Box className=' flex flex-col '>
       <Box className='grow flex items-center justify-center p-8 text-center'>
         <Box className='max-w-4xl mx-auto'>
-          <TypewriterText
-            text='Save what matters most. Manage your notes.'
-            variant='h2'
-            component='h1'
-            gutterBottom
-            delay={50}
-            className='text-5xl font-extrabold text-gray-900 leading-tight mb-4'
-            onAnimationEnd={handleTitleAnimationEnd}
-          />
-
-          {titleAnimationFinished && (
-            <TypewriterText
-              text='Upload PDFs or text files, easily highlight, save, and catalog your favorite sections for quick access.'
-              variant='h5'
-              component='p'
-              delay={30}
-              initialDelay={500}
-              className='text-xl text-gray-600 mb-8'
-              onAnimationEnd={handleDescriptionAnimationEnd}
-            />
-          )}
-
-          <Box
-            className={`transition-opacity duration-1000 opacity-100'
-            }`}
-          >
-            <LinkButton
-              label='Upload and read'
-              variant='contained'
-              size='large'
-              to='/upload'
-              className='bg-green-600 hover:bg-green-700 py-3 px-8 text-lg shadow-xl mr-4'
-            />
-            {!isSignedIn && (
+          <Box>
+            <AnimationText />
+            <Box className={`flex gap-5 mt-8 justify-center`}>
               <LinkButton
-                label='Sign in for save notes'
-                variant='outlined'
+                label='Upload and read'
+                variant='contained'
                 size='large'
-                to='/auth'
-                className='text-indigo-600 border-indigo-600 hover:bg-indigo-50 py-3 px-8 text-lg'
+                to='/upload'
+                className='shadow-xl'
               />
-            )}
+              {!isSignedIn && (
+                <LinkButton
+                  label='Sign in for save notes'
+                  variant='outlined'
+                  size='large'
+                  to='/auth'
+                />
+              )}
+            </Box>
           </Box>
         </Box>
       </Box>
-
-      <Footer />
     </Box>
   );
 };

@@ -4,7 +4,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 import { extractErrorMessage } from '@/shared/utils/error.utils';
-import { useBookmarkStore } from '@/features/bookmark/store/bookmark.store';
+import { useBookmarkStore } from '../store/bookmark.store';
 import { useFileStore } from '@/features/file/store/file.store';
 import type {
   IBookmark,

@@ -1,13 +1,14 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
-import { FileUploadForm } from '@features/file/ui/FileUploadForm';
+import { FileUploadForm } from '@features/file/ui/FileUploadForm/FileUploadForm';
 
 const UploadPage = () => {
   return (
-    <Box className='min-h-screen flex flex-col bg-gray-100'>
-      <Box className='grow flex items-center justify-center p-8'>
-        <FileUploadForm />
-      </Box>
+    <Box className='flex flex-col  bg-gray-100 p-8'>
+      <Typography variant='h4' component='h1' className=''>
+        Upload a new file
+      </Typography>
+      <FileUploadForm className='my-auto' />
     </Box>
   );
 };

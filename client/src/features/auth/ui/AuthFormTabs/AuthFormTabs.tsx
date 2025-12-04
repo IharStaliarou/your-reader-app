@@ -29,9 +29,17 @@ export const AuthFormTabs = () => {
   };
 
   return (
-    <Box className='flex flex-col items-center justify-center'>
-      <TabSwitcher mode={currentMode} onModeChange={handleModeChange} />
-      <AuthForms mode={currentMode} onSignUpSuccess={handleSignUpSuccess} />
+    <Box className='flex flex-col items-center h-full'>
+      <TabSwitcher
+        mode={currentMode}
+        onModeChange={handleModeChange}
+        className='bg-white rounded-full'
+      />
+      <AuthForms
+        mode={currentMode}
+        onSignUpSuccess={handleSignUpSuccess}
+        className='my-auto'
+      />
     </Box>
   );
 };

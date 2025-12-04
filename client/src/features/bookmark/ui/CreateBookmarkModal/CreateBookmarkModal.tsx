@@ -9,11 +9,11 @@ import {
   Grid,
 } from '@mui/material';
 
+import { useCreateBookmarkMutation } from '../../api/bookmark.api';
 import {
   type ICreateBookmarkDto,
   type ICreateBookmarkInitialData,
 } from '@/shared/interfaces/bookmark.interface';
-import { useCreateBookmarkMutation } from '../api/bookmark.api';
 import { useFileStore } from '@/features/file/store/file.store';
 import { NOTE_COLORS } from '@/shared/constants/color.constants';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
@@ -32,7 +32,7 @@ export const CreateBookmarkModal = ({
 }: ICreateBookmarkModalProps) => {
   const [title, setTitle] = useState('');
   const [selectedColor, setSelectedColor] = useState(initialData.color);
-  const activeFileId = useFileStore((state) => state.activeFileId);
+  const { activeFileId } = useFileStore((state) => state);
 
   const { mutate: createBookmark, isPending: isCreating } =
     useCreateBookmarkMutation();

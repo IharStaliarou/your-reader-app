@@ -1,8 +1,11 @@
 import { AxiosError } from 'axios';
 import { CircularProgress, Typography, Grid, Box, Alert } from '@mui/material';
 
-import { FileCard } from './FileCard';
-import { useDeleteFileMutation, useGetUserFilesQuery } from '../api/file.api';
+import { FileCard } from '../FileCard/FileCard';
+import {
+  useDeleteFileMutation,
+  useGetUserFilesQuery,
+} from '../../api/file.api';
 import { getUploadedFilesArray } from '@/shared/utils/file.utils';
 
 export const FilesList = () => {

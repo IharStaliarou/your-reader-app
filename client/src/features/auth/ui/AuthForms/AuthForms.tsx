@@ -8,12 +8,17 @@ import { SignUpForm } from '../SignUpForm/SignUpForm';
 interface IAuthFormsProps {
   mode: AuthModeType;
   onSignUpSuccess: () => void;
+  className?: string;
 }
 
-export const AuthForms = ({ mode, onSignUpSuccess }: IAuthFormsProps) => {
+export const AuthForms = ({
+  mode,
+  onSignUpSuccess,
+  className,
+}: IAuthFormsProps) => {
   return mode === AUTH_TYPES.SIGN_IN ? (
-    <SignInForm />
+    <SignInForm className={className} />
   ) : (
-    <SignUpForm onSuccess={onSignUpSuccess} />
+    <SignUpForm className={className} onSuccess={onSignUpSuccess} />
   );
 };

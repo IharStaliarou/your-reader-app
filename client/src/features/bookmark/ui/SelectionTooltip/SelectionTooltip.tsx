@@ -1,6 +1,7 @@
+import type { CSSProperties } from 'react';
 import { Box, ClickAwayListener, Paper, Typography } from '@mui/material';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
-import type { CSSProperties } from 'react';
+
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
 
 interface ISelectionTooltipProps {

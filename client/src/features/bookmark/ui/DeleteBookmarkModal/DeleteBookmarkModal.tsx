@@ -7,8 +7,8 @@ import {
   Box,
 } from '@mui/material';
 
+import { useDeleteBookmarkMutation } from '../../api/bookmark.api';
 import { type IBookmark } from '@/shared/interfaces/bookmark.interface';
-import { useDeleteBookmarkMutation } from '../api/bookmark.api';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
 
 // TODO: create universal modal for all actions

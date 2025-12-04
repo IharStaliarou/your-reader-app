@@ -8,16 +8,16 @@ import {
   type MouseEvent,
 } from 'react';
 
-import { useWordSelection } from '@/features/file/hooks/useWordSelection';
+import { useWordSelection } from '../../hooks/useWordSelection';
 import { useBookmarkStore } from '@/features/bookmark/store/bookmark.store';
 import {
   useDeleteBookmarkMutation,
   useCreateBookmarkMutation,
 } from '@/features/bookmark/api/bookmark.api';
-import { SelectionTooltip } from '@/features/bookmark/ui/SelectionTooltip';
-import { CreateBookmarkModal } from '@/features/bookmark/ui/CreateBookmarkModal';
-import { DeleteBookmarkModal } from '@/features/bookmark/ui/DeleteBookmarkModal';
-import { OverlapModal } from '@/features/bookmark/ui/OverlapModal';
+import { SelectionTooltip } from '@/features/bookmark/ui/SelectionTooltip/SelectionTooltip';
+import { CreateBookmarkModal } from '@/features/bookmark/ui/CreateBookmarkModal/CreateBookmarkModal';
+import { DeleteBookmarkModal } from '@/features/bookmark/ui/DeleteBookmarkModal/DeleteBookmarkModal';
+import { OverlapModal } from '@/features/bookmark/ui/OverlapModal/OverlapModal';
 import { tokenizeContent } from '@/shared/utils/text.utils';
 import type { ScrollToCharFnType } from '@/shared/interfaces/file.interface';
 import { CONTENT_HEIGHT } from '@/shared/constants/file.constants';
@@ -231,6 +231,7 @@ export const FileContentViewer = ({
             const isSelected = isTokenSelected(index);
 
             const style: CSSProperties = {
+              color: 'black',
               cursor: 'pointer',
               backgroundColor: isPermanentBookmark
                 ? bookmark!.color

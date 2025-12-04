@@ -5,7 +5,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { useFileStore } from '@/features/file/store/file.store';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
-import { FileContentBody } from '@/features/file/ui/FileContentBody';
+import { FileContentBody } from '@/features/file/ui/FileContentBody/FileContentBody';
 
 export const FileContentPage = () => {
   const { fileId } = useParams<{ fileId: string }>();

@@ -8,9 +8,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'primary-brand': '#2196F3',
-        'secondary-brand': '#FFC107',
-        'app-background': '#f7f9fc',
+        'main-orange': '#FF7B4E',
       },
       spacing: {
         '128': '32rem',
@@ -25,6 +23,16 @@ const config: Config = {
       animation: {
         blink: 'blink 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'slow-pulse': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+      backgroundImage: {
+        'gradient-orange':
+          'linear-gradient(171.6deg, rgb(255, 123, 78), rgb(255, 88, 78) 100%)',
+        'gradient-orange-with-white':
+          'linear-gradient(171.6deg, rgb(255, 123, 78), rgb(255, 88, 78) 100%), rgb(255, 255, 255)',
+      },
+      backgroundColor: {
+        'orange-gradient':
+          'linear-gradient(171.6deg, rgb(255, 123, 78), rgb(255, 88, 78) 100%)',
       },
     },
   },
