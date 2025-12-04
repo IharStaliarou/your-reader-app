@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+import { APP_PATHS } from '@/shared/constants/api.constants';
+
 interface IAuthState {
   isSignedIn: boolean;
   isSigningOut: boolean;
@@ -25,5 +27,5 @@ export const signOutCleanupGlobal = () => {
   localStorage.removeItem('accessToken');
   useAuthStore.getState().setIsSignedIn(false);
 
-  window.location.href = '/';
+  window.location.href = APP_PATHS.HOME;
 };

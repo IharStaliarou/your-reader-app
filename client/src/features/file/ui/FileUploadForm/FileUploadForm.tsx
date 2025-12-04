@@ -3,12 +3,16 @@ import { Box, Typography } from '@mui/material';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { toast } from 'react-toastify';
 
-import { useUploadFileMutation } from '../api/file.api';
+import { useUploadFileMutation } from '../../api/file.api';
+import { UploadStatus } from '../UploadStatus/UploadStatus';
 import { isAllowedFileType } from '@/shared/utils/file.utils';
-import { UploadStatus } from './UploadStatus';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
 
-export const FileUploadForm = () => {
+interface IFileUploadFormProps {
+  className?: string;
+}
+
+export const FileUploadForm = ({ className }: IFileUploadFormProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const {
@@ -49,9 +53,11 @@ export const FileUploadForm = () => {
   };
 
   return (
-    <Box className='p-6 border rounded-lg shadow-md max-w-md mx-auto'>
+    <Box
+      className={`${className} p-6 border rounded-lg shadow-md max-w-md mx-auto`}
+    >
       <Typography variant='h6' gutterBottom>
-        Upload Document (PDF or TXT)
+        Choose your new file (PDF or TXT)
       </Typography>
 
       <input
@@ -61,23 +67,22 @@ export const FileUploadForm = () => {
         onChange={handleFileSelect}
         accept='.pdf,.txt'
       />
-      <AppButton
-        label={selectedFile ? selectedFile.name : 'Select File'}
-        variant='outlined'
-        startIcon={<UploadFileIcon />}
-        fullWidth
-        onClick={() => fileInputRef.current?.click()}
-        className='mb-4'
-      />
-      <AppButton
-        label={isPending ? 'Uploading...' : 'Upload'}
-        isLoading={isPending}
-        variant='contained'
-        color='primary'
-        fullWidth
-        onClick={handleUpload}
-        disabled={!selectedFile || isPending}
-      />
+      <Box className='flex flex-col gap-2'>
+        <AppButton
+          label={selectedFile ? selectedFile.name : 'Select File'}
+          variant='outlined'
+          startIcon={<UploadFileIcon />}
+          onClick={() => fileInputRef.current?.click()}
+          className='mb-4'
+        />
+        <AppButton
+          label={isPending ? 'Uploading...' : 'Upload'}
+          isLoading={isPending}
+          variant='contained'
+          onClick={handleUpload}
+          disabled={!selectedFile || isPending}
+        />
+      </Box>
 
       <UploadStatus
         isSuccess={isSuccess}

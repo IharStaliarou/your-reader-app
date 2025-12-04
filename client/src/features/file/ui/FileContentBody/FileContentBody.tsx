@@ -1,11 +1,11 @@
 import { Box, Typography } from '@mui/material';
 
 import { useGetFileBookmarksQuery } from '@/features/bookmark/api/bookmark.api';
-import { useFilePagination } from '@/features/file/hooks/useFilePagination';
+import { BookmarksList } from '@/features/bookmark/ui/BookmarksList/BookmarksList';
+import { useFilePagination } from '../../hooks/useFilePagination';
+import { FileContentViewer } from '../../ui/FileContentViewer/FileContentViewer';
+import { useGetUserFilesQuery } from '../../api/file.api';
 import { AppPagination } from '@/shared/ui/AppPagination/AppPagination';
-import { FileContentViewer } from '@/features/file/ui/FileContentViewer';
-import { BookmarksList } from '@/features/bookmark/ui/BookmarksList';
-import { useGetUserFilesQuery } from '../api/file.api';
 import { getCurrentFile, getFileTitle } from '@/shared/utils/file.utils';
 
 interface IFileContentBodyProps {

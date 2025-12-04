@@ -7,6 +7,7 @@ export const Logo = () => {
       variant='text'
       to='/'
       className='bg-clip-text transition duration-300 tracking-wider'
+      sx={{ color: 'var(--main-orange)', fontSize: '24px' }}
     />
   );
 };

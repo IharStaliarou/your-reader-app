@@ -11,15 +11,20 @@ export const Header = () => {
   return (
     <AppBar
       position='static'
-      color='transparent'
-      elevation={0}
-      className='border-b border-gray-200'
+      elevation={1}
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: 60,
+        padding: '20px 30px',
+        bgcolor: 'white',
+      }}
     >
-      <Toolbar className='flex justify-between'>
-        <Logo />
-        <NavPanel className='flex w-auto sx:hidden' children={<NavLinks />} />
-        <AuthActionButtons isSignedIn={isSignedIn} isHorizontal={true} />
-      </Toolbar>
+      <Logo />
+      <NavPanel className='flex w-auto sx:hidden' children={<NavLinks />} />
+      <AuthActionButtons isSignedIn={isSignedIn} isHorizontal={true} />
     </AppBar>
   );
 };

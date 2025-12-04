@@ -5,12 +5,12 @@ import type { INavLinkItem } from '@/shared/config/navigation.config';
 
 interface ISidebarLinkItemProps {
   link: INavLinkItem;
-  isHorizontal?: boolean;
+  isShowIcon?: boolean;
 }
 
 export const NavLinkItem = ({
   link,
-  isHorizontal = false,
+  isShowIcon = false,
 }: ISidebarLinkItemProps) => {
   const location = useLocation();
   const isSelected =
@@ -23,15 +23,16 @@ export const NavLinkItem = ({
       to={link.to}
       selected={isSelected}
       sx={{
-        py: isHorizontal ? 0.5 : 1,
-        px: isHorizontal ? 1 : 2,
-        mr: isHorizontal ? 1 : 0,
+        borderRadius: '60px',
+        padding: 1,
       }}
     >
-      <ListItemIcon sx={{ minWidth: 40 }}>
-        <link.icon color={isSelected ? 'primary' : 'inherit'} />
-      </ListItemIcon>
-      <ListItemText primary={link.label} /> 
+      {isShowIcon && (
+        <ListItemIcon sx={{ minWidth: 40 }}>
+          <link.icon />
+        </ListItemIcon>
+      )}
+      <ListItemText primary={link.label} sx={{ color: 'var(--main-orange)' }} />
     </ListItemButton>
   );
 };

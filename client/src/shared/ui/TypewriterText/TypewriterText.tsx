@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Typography, type TypographyProps } from '@mui/material';
 
 interface ITypewriterTextProps extends TypographyProps {
@@ -17,6 +17,7 @@ export const TypewriterText = ({
 }: ITypewriterTextProps) => {
   const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
+  const animationEndCalled = useRef(false);
 
   useEffect(() => {
     let initialTimer: ReturnType<typeof setTimeout>;
@@ -29,8 +30,12 @@ export const TypewriterText = ({
 
           if (nextIndex > text.length) {
             clearInterval(charTimer);
-            if (onAnimationEnd) {
-              onAnimationEnd();
+
+            if (onAnimationEnd && !animationEndCalled.current) {
+              animationEndCalled.current = true;
+              setTimeout(() => {
+                onAnimationEnd();
+              }, 0);
             }
             return prevIndex;
           }

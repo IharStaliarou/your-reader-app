@@ -9,7 +9,11 @@ import { AppButton } from '@/shared/ui/AppButton/AppButton';
 import { ControlledTextField } from '@/shared/ui/ControlledTextField/ControlledTextField';
 import { APP_PATHS } from '@/shared/constants/api.constants';
 
-export const SignInForm = () => {
+interface ISignInFormProps {
+  className?: string;
+}
+
+export const SignInForm = ({ className }: ISignInFormProps) => {
   const navigate = useNavigate();
   const { mutate: signInMutate, isPending } = useSignInMutation();
 
@@ -33,7 +37,7 @@ export const SignInForm = () => {
     <Box
       component='form'
       onSubmit={handleSubmit(handleFormSubmit)}
-      className='flex flex-col gap-4 p-6 bg-white shadow-xl rounded-lg w-full max-w-sm'
+      className={`flex flex-col gap-4 p-6 bg-white shadow-xl rounded-[26px] ${className}`}
     >
       <ControlledTextField
         register={signIn}

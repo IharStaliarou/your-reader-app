@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, type ChangeEvent } from 'react';
+
 import { useGetFileContentQuery } from '@/features/file/api/file.api';
 import type { ScrollToCharFnType } from '@/shared/interfaces/file.interface';
 import { PAGE_SIZE } from '@/shared/constants/file.constants';
@@ -62,7 +63,6 @@ export const useFilePagination = (fileId: string): UseFilePaginationResult => {
     setScrollToCharFn(() => fn);
   }, []);
 
-  // Смена страницы
   const handlePageChange = useCallback(
     (_event: ChangeEvent<unknown>, value: number) => {
       setCurrentPage(value);

@@ -2,6 +2,7 @@ import { AxiosError } from 'axios';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
+import { useFileStore } from '../store/file.store';
 import {
   MULTER_FIELD_NAME,
   API_ENDPOINTS,
@@ -15,7 +16,6 @@ import type {
   IFilePageContent,
 } from '@/shared/interfaces/file.interface';
 import { extractErrorMessage } from '@/shared/utils/error.utils';
-import { useFileStore } from '../store/file.store';
 import { FILE_QUERY_KEYS } from '@/shared/constants/queryKeys.constants';
 import { DEFAULT_PAGE_SIZE } from '@/shared/constants/file.constants';
 
