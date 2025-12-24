@@ -15,7 +15,7 @@ import {
   type ICreateBookmarkInitialData,
 } from '@/shared/interfaces/bookmark.interface';
 import { useFileStore } from '@/features/file/store/file.store';
-import { NOTE_COLORS } from '@/shared/constants/color.constants';
+import { APP_COLORS, NOTE_COLORS } from '@/shared/constants/color.constants';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
 import { CommonTextField } from '@/shared/ui/CommonTextField/CommonTextField';
 
@@ -71,10 +71,12 @@ export const CreateBookmarkModal = ({
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth='sm' fullWidth>
-      <DialogTitle>Create New Bookmark 📝</DialogTitle>
+      <DialogTitle sx={{ fontSize: { xs: '18px', md: '20px' } }}>
+        Create New Bookmark 📝
+      </DialogTitle>
 
       <form onSubmit={handleSubmit}>
-        <DialogContent dividers>
+        <DialogContent dividers sx={{ p: { xs: 2, sm: 3 } }}>
           <CommonTextField
             autoFocus
             label='Title (Optional)'
@@ -100,8 +102,8 @@ export const CreateBookmarkModal = ({
                     cursor: 'pointer',
                     border:
                       selectedColor === color
-                        ? `3px solid #333`
-                        : '1px solid #ccc',
+                        ? `3px solid ${APP_COLORS['border-strong']}`
+                        : `1px solid ${APP_COLORS['border-muted']}`,
                     transition: 'border 0.2s',
                     '&:hover': { opacity: 0.8 },
                   }}
@@ -113,8 +115,8 @@ export const CreateBookmarkModal = ({
 
           <Box
             sx={{
-              p: 1.5,
-              backgroundColor: '#f5f5f5',
+              p: { xs: 1.25, sm: 1.5 },
+              backgroundColor: APP_COLORS.surface,
               borderRadius: 1,
               borderLeft: `4px solid ${selectedColor}`,
             }}
@@ -136,12 +138,13 @@ export const CreateBookmarkModal = ({
           </Typography>
         </DialogContent>
 
-        <DialogActions>
+        <DialogActions sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 3 } }}>
           <AppButton
             label='Cancel'
             onClick={onClose}
             color='inherit'
             disabled={isCreating}
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
           />
 
           <AppButton
@@ -151,6 +154,7 @@ export const CreateBookmarkModal = ({
             color='primary'
             variant='contained'
             disabled={isCreating}
+            sx={{ ml: { sm: 2 }, width: { xs: '100%', sm: 'auto' } }}
           />
         </DialogActions>
       </form>

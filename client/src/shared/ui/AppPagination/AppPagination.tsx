@@ -44,7 +44,10 @@ export const AppPagination = ({
   if (totalPages <= 1) return null;
 
   return (
-    <Box className='my-4 flex flex-col items-center gap-2'>
+    <Box
+      className='my-4 flex flex-col items-center gap-2'
+      sx={{ px: { xs: 'var(--space-sm)', md: 0 } }}
+    >
       {showPageInfo && (
         <Typography variant='h6' gutterBottom>
           Page {currentPage} of {totalPages}

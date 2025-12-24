@@ -29,8 +29,10 @@ export const FileContentBody = ({ fileId }: IFileContentBodyProps) => {
   } = useFilePagination(fileId);
 
   return (
-    <Box>
-      <Typography variant='h4'>{getFileTitle(currentFile)}</Typography>
+    <Box className='flex flex-col gap-4 sm:gap-6'>
+      <Typography variant='h4' sx={{ fontSize: { xs: '22px', md: '28px' } }}>
+        {getFileTitle(currentFile)}
+      </Typography>
 
       <AppPagination
         currentPage={currentPage}
@@ -40,7 +42,10 @@ export const FileContentBody = ({ fileId }: IFileContentBodyProps) => {
         showPageInfo={true}
       />
 
-      <Box className='flex justify-between gap-5'>
+      <Box
+        className='flex gap-4 sm:gap-6 flex-col lg:flex-row'
+        sx={{ alignItems: { xs: 'stretch', lg: 'flex-start' } }}
+      >
         <FileContentViewer
           content={pageData?.content || ''}
           globalCharOffset={globalCharOffset}
@@ -48,7 +53,12 @@ export const FileContentBody = ({ fileId }: IFileContentBodyProps) => {
           isLoading={isFetching}
         />
 
-        <Box sx={{ border: '1px solid red' }}>
+        <Box
+          sx={{
+            width: { xs: '100%', lg: '360px' },
+            maxWidth: '100%',
+          }}
+        >
           {fileId && <BookmarksList onScrollToChar={handleScrollToBookmark} />}
         </Box>
       </Box>

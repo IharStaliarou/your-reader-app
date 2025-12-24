@@ -61,7 +61,6 @@ export const FileCard = ({ file, onDelete }: IFileCardProps) => {
         <LinkButton
           to={`/files/${file.id}`}
           label='Read'
-          variant='contained'
           startIcon={<BookOpenIcon />}
           sx={{ flexGrow: 1, mr: 1 }}
         />

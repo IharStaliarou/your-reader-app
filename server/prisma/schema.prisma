@@ -40,7 +40,7 @@ model File {
   contentLength Int    @map("content_length")
 
   userId String @map("user_id")
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   Bookmark Bookmark[]
 
@@ -60,10 +60,10 @@ model Bookmark {
   color        String @default("#a8e6cf")
 
   fileId String @map("file_id")
-  file   File   @relation(fields: [fileId], references: [id])
+  file   File   @relation(fields: [fileId], references: [id], onDelete: Cascade)
 
   userId String @map("user_id")
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

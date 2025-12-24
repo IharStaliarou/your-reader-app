@@ -1,21 +1,25 @@
 import type { SystemStyleObject } from '@mui/system';
+import { APP_COLORS } from '@/shared/constants/color.constants';
 
 export const groupSx: Record<string, any> = {
   // TODO: fix types
   position: 'relative',
   overflow: 'hidden',
   borderRadius: '60px',
-  backgroundColor: '#f5f5f5',
+  backgroundColor: APP_COLORS.paper,
   padding: '4px',
+  boxShadow: '0 8px 24px rgba(31, 93, 47, 0.15)',
+  border: `1px solid rgba(31, 93, 47, 0.12)`,
   '&::before': {
     content: '""',
     position: 'absolute',
     top: '4px',
     width: 'calc(50% - 8px)',
     height: 'calc(100% - 8px)',
-    background: 'linear-gradient(171.6deg, #ff7b4e, #ff584e)',
+    background: 'var(--gradient-green-soft)',
     transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     zIndex: 0,
+    boxShadow: '0 4px 12px rgba(31, 93, 47, 0.2)',
   },
 };
 

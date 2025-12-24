@@ -18,7 +18,7 @@ import type {
   IBookmark,
   ICreateBookmarkInitialData,
 } from '@/shared/interfaces/bookmark.interface';
-import { NOTE_COLORS } from '@/shared/constants/color.constants';
+import { APP_COLORS, NOTE_COLORS } from '@/shared/constants/color.constants';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
 import { CommonTextField } from '@/shared/ui/CommonTextField/CommonTextField';
 
@@ -66,11 +66,13 @@ export const OverlapModal = ({
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth='sm' fullWidth>
-      <DialogTitle sx={{ color: 'error.main' }}>
+      <DialogTitle
+        sx={{ color: 'error.main', fontSize: { xs: '18px', md: '20px' } }}
+      >
         🛑 Overlap Warning: Cannot Create Note
       </DialogTitle>
 
-      <DialogContent dividers>
+      <DialogContent dividers sx={{ p: { xs: 2, sm: 3 } }}>
         <Typography variant='body1' gutterBottom>
           The selected text fragment **overlaps** with the following existing
           notes. You must resolve this conflict to proceed.
@@ -101,8 +103,8 @@ export const OverlapModal = ({
                   cursor: 'pointer',
                   border:
                     selectedColor === color
-                      ? `3px solid #333`
-                      : '1px solid #ccc',
+                      ? `3px solid ${APP_COLORS['border-strong']}`
+                      : `1px solid ${APP_COLORS['border-muted']}`,
                   transition: 'border 0.2s',
                   '&:hover': { opacity: 0.8 },
                 }}
@@ -114,10 +116,10 @@ export const OverlapModal = ({
         <Box
           sx={{
             mt: 2,
-            p: 1.5,
-            backgroundColor: '#ffeeee',
+            p: { xs: 1.25, sm: 1.5 },
+            backgroundColor: APP_COLORS['warning-soft'],
             borderRadius: 1,
-            borderLeft: `4px solid ${selectedColor || 'red'}`,
+            borderLeft: `4px solid ${selectedColor || APP_COLORS['note-pink']}`,
           }}
         >
           <Typography variant='subtitle2' color='error'>
@@ -140,8 +142,10 @@ export const OverlapModal = ({
               sx={{
                 mb: 1,
                 p: 1,
-                borderLeft: `3px solid ${b.color || '#ccc'}`,
-                backgroundColor: '#f9f9f9',
+                borderLeft: `3px solid ${
+                  b.color || APP_COLORS['border-muted']
+                }`,
+                backgroundColor: APP_COLORS['surface-muted'],
               }}
             >
               <Typography variant='body2'>
@@ -156,12 +160,13 @@ export const OverlapModal = ({
         </Typography>
       </DialogContent>
 
-      <DialogActions>
+      <DialogActions sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 3 } }}>
         <AppButton
           label='Cancel'
           onClick={onClose}
           color='inherit'
           disabled={isPending}
+          sx={{ width: { xs: '100%', sm: 'auto' } }}
         />
 
         <AppButton
@@ -176,7 +181,7 @@ export const OverlapModal = ({
           color='error'
           variant='contained'
           disabled={isPending}
-          sx={{ ml: 2 }}
+          sx={{ ml: { sm: 2 }, width: { xs: '100%', sm: 'auto' } }}
         />
       </DialogActions>
     </Dialog>

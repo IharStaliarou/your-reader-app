@@ -9,6 +9,7 @@ import {
 
 import { useDeleteBookmarkMutation } from '../../api/bookmark.api';
 import { type IBookmark } from '@/shared/interfaces/bookmark.interface';
+import { APP_COLORS } from '@/shared/constants/color.constants';
 import { AppButton } from '@/shared/ui/AppButton/AppButton';
 
 // TODO: create universal modal for all actions
@@ -36,9 +37,11 @@ export const DeleteBookmarkModal = ({
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth='xs' fullWidth>
-      <DialogTitle>Delete Bookmark? 🗑️</DialogTitle>
+      <DialogTitle sx={{ fontSize: { xs: '18px', md: '20px' } }}>
+        Delete Bookmark? 🗑️
+      </DialogTitle>
 
-      <DialogContent dividers>
+      <DialogContent dividers sx={{ p: { xs: 2, sm: 3 } }}>
         <Typography variant='body1' gutterBottom>
           Are you sure you want to delete this bookmark? This action cannot be
           undone.
@@ -48,9 +51,11 @@ export const DeleteBookmarkModal = ({
           sx={{
             mt: 2,
             p: 1.5,
-            backgroundColor: '#f5f5f5',
+            backgroundColor: APP_COLORS.surface,
             borderRadius: 1,
-            borderLeft: `4px solid ${bookmark.color || '#ff677d'}`,
+            borderLeft: `4px solid ${
+              bookmark.color || APP_COLORS['note-pink']
+            }`,
           }}
         >
           <Typography variant='subtitle2' color='text.secondary'>
@@ -71,12 +76,13 @@ export const DeleteBookmarkModal = ({
         </Box>
       </DialogContent>
 
-      <DialogActions>
+      <DialogActions sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 3 } }}>
         <AppButton
           label='Cancel'
           onClick={onClose}
           color='inherit'
           disabled={isDeleting}
+          sx={{ width: { xs: '100%', sm: 'auto' } }}
         />
 
         <AppButton
@@ -86,6 +92,7 @@ export const DeleteBookmarkModal = ({
           color='error'
           variant='contained'
           disabled={isDeleting}
+          sx={{ ml: { sm: 2 }, width: { xs: '100%', sm: 'auto' } }}
         />
       </DialogActions>
     </Dialog>

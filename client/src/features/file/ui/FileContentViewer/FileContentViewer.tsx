@@ -21,6 +21,7 @@ import { OverlapModal } from '@/features/bookmark/ui/OverlapModal/OverlapModal';
 import { tokenizeContent } from '@/shared/utils/text.utils';
 import type { ScrollToCharFnType } from '@/shared/interfaces/file.interface';
 import { CONTENT_HEIGHT } from '@/shared/constants/file.constants';
+import { APP_COLORS } from '@/shared/constants/color.constants';
 
 // TODO: split this into smaller components
 interface IFileContentViewerProps {
@@ -191,13 +192,15 @@ export const FileContentViewer = ({
     <Paper
       elevation={3}
       sx={{
-        p: 2,
-        height: CONTENT_HEIGHT,
-        width: '1000px',
+        p: { xs: 'var(--space-sm)', md: 'var(--space-md)' },
+        height: { xs: '60vh', md: CONTENT_HEIGHT },
+        width: '100%',
+        maxWidth: '100%',
         overflowY: 'auto',
-        backgroundColor: '#ffffff', // TODO: const or theme
+        backgroundColor: APP_COLORS.paper,
         position: 'relative',
-        border: '1px solid #000',
+        border: `1px solid rgba(27, 23, 22, 0.08)`,
+        borderRadius: 'var(--radius-lg)',
       }}
     >
       {isLoading ? (
@@ -220,9 +223,10 @@ export const FileContentViewer = ({
         <Box
           ref={containerRef}
           sx={{
-            fontSize: '1rem',
-            lineHeight: 1.6,
+            fontSize: { xs: 'clamp(14px, 1.8vw, 16px)', md: '1rem' },
+            lineHeight: 1.7,
             userSelect: 'none',
+            wordBreak: 'break-word',
           }}
         >
           {tokens.map((token, index) => {
@@ -231,7 +235,7 @@ export const FileContentViewer = ({
             const isSelected = isTokenSelected(index);
 
             const style: CSSProperties = {
-              color: 'black',
+              color: APP_COLORS.ink,
               cursor: 'pointer',
               backgroundColor: isPermanentBookmark
                 ? bookmark!.color

@@ -49,12 +49,18 @@ export const FileUploadForm = ({ className }: IFileUploadFormProps) => {
     if (isError) reset();
     if (selectedFile) {
       uploadMutate({ file: selectedFile });
+      setSelectedFile(null);
     }
   };
 
   return (
     <Box
-      className={`${className} p-6 border rounded-lg shadow-md max-w-md mx-auto`}
+      className={`${className} w-full max-w-2xl mx-auto`}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: { xs: 1.5, sm: 2 },
+      }}
     >
       <Typography variant='h6' gutterBottom>
         Choose your new file (PDF or TXT)
@@ -82,6 +88,13 @@ export const FileUploadForm = ({ className }: IFileUploadFormProps) => {
           onClick={handleUpload}
           disabled={!selectedFile || isPending}
         />
+        {selectedFile && (
+          <AppButton
+            label='Clear'
+            variant='outlined'
+            onClick={() => setSelectedFile(null)}
+          />
+        )}
       </Box>
 
       <UploadStatus
