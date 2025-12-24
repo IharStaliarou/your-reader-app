@@ -27,18 +27,26 @@ export const SelectionTooltip = ({
     left: position.x,
     zIndex: 100,
     transform: 'translateY(-100%)',
-    maxWidth: 250,
+    maxWidth: 280,
+    width: 'max-content',
   };
 
   return (
     <ClickAwayListener onClickAway={() => {}}>
       <Paper elevation={8} sx={style}>
-        <Box sx={{ p: 1.5 }}>
+        <Box sx={{ p: { xs: 1.25, sm: 1.5 } }}>
           <Typography variant='body2' sx={{ mb: 1, color: 'text.secondary' }}>
             {tooltipText}
           </Typography>
-          <Box className='flex gap-2'>
-            <AppButton label='Cancel' onClick={onClose} />
+          <Box
+            className='flex gap-2'
+            sx={{ flexDirection: { xs: 'column', sm: 'row' } }}
+          >
+            <AppButton
+              label='Cancel'
+              onClick={onClose}
+              sx={{ width: { xs: '100%', sm: 'auto' } }}
+            />
             <AppButton
               label='Add to bookmarks'
               size='small'
@@ -46,7 +54,7 @@ export const SelectionTooltip = ({
               color='primary'
               onClick={onConfirm}
               startIcon={<BookmarkAddIcon />}
-              fullWidth
+              sx={{ width: { xs: '100%', sm: 'auto' } }}
             />
           </Box>
         </Box>

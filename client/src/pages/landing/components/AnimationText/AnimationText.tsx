@@ -33,7 +33,7 @@ export const AnimationText = () => {
           component='p'
           delay={30}
           initialDelay={500}
-          className='text-xl text-gray-50'
+          className='text-xl text-gray-400'
           onAnimationEnd={handleDescriptionAnimationEnd}
         />
       )}

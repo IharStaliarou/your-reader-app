@@ -1,3 +1,5 @@
+import { APP_COLORS } from './color.constants';
+
 export const DEFAULT_PAGE_SIZE = 10000;
 export const MAX_FILE_SIZE_MB = 5;
 export const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -10,5 +12,5 @@ export const DUMMY_FRAGMENT_DATA = {
   textFragment: '',
   startChar: 0,
   endChar: 0,
-  color: '#f0f0f0',
+  color: APP_COLORS.surface,
 };

@@ -15,6 +15,7 @@ import { useBookmarkStore } from '../../store/bookmark.store';
 import { useDeleteBookmarkMutation } from '../../api/bookmark.api';
 import { DeleteBookmarkModal } from '../DeleteBookmarkModal/DeleteBookmarkModal';
 import type { IBookmark } from '@/shared/interfaces/bookmark.interface';
+import { APP_COLORS } from '@/shared/constants/color.constants';
 
 interface IBookmarksListProps {
   onScrollToChar: (startChar: number) => void;
@@ -58,11 +59,29 @@ export const BookmarksList = ({ onScrollToChar }: IBookmarksListProps) => {
   }
 
   return (
-    <Box mt={3} sx={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
-      <Typography variant='h6' gutterBottom>
+    <Box
+      mt={3}
+      sx={{
+        maxHeight: { xs: '50vh', md: 'calc(100vh - 220px)' },
+        overflowY: 'auto',
+        width: '100%',
+      }}
+    >
+      <Typography
+        variant='h6'
+        gutterBottom
+        sx={{ fontSize: { xs: '18px', md: '20px' } }}
+      >
         Bookmarks ({bookmarks.length})
       </Typography>
-      <List dense disablePadding sx={{ width: '600px' }}>
+      <List
+        dense
+        disablePadding
+        sx={{
+          width: '100%',
+          maxWidth: { xs: '100%', md: '420px', lg: '500px' },
+        }}
+      >
         {bookmarks.map((bookmark) => (
           <ListItem
             key={bookmark.id}
@@ -95,12 +114,14 @@ export const BookmarksList = ({ onScrollToChar }: IBookmarksListProps) => {
               pr: 2,
               py: 1,
 
-              borderLeft: `4px solid ${bookmark.color || '#ccc'}`,
+              borderLeft: `4px solid ${
+                bookmark.color || APP_COLORS['border-muted']
+              }`,
               mb: 1,
               borderRadius: 1,
-              backgroundColor: '#fafafa',
+              backgroundColor: APP_COLORS['surface-weak'],
               transition: 'background-color 0.2s',
-              '&:hover': { backgroundColor: '#f0f0f0' },
+              '&:hover': { backgroundColor: APP_COLORS.surface },
             }}
           >
             <ListItemText

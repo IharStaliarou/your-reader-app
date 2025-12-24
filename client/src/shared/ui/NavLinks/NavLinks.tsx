@@ -12,7 +12,7 @@ export const NavLinks = () => {
   return (
     <>
       {visibleLinks.map((link) => (
-        <NavLinkItem key={link.to} link={link} isHorizontal={true} />
+        <NavLinkItem key={link.to} link={link} />
       ))}
     </>
   );

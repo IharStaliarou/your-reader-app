@@ -22,13 +22,13 @@ export const FileContentPage = () => {
   }, [fileId, setActiveFileId, clearActiveFileId]);
 
   return (
-    <Box>
-      <Box className='flex flex-col gap-5'>
+    <Box className='flex flex-col gap-4 sm:gap-6'>
+      <Box className='flex flex-col gap-3 sm:gap-4'>
         <AppButton
           label='Back to My Files'
           startIcon={<ArrowBackIcon />}
           onClick={() => navigate(-1)}
-          className='w-60'
+          className='w-full sm:w-60'
         />
       </Box>
 

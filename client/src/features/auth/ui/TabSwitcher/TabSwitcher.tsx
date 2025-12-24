@@ -45,13 +45,17 @@ export const TabSwitcher = ({
         },
       }}
     >
-      <TabButton value={AUTH_TYPES.SIGN_IN} borderRadius='60px 0 0 60px'>
-        Sign in
-      </TabButton>
+      <TabButton
+        label='Sign in'
+        value={AUTH_TYPES.SIGN_IN}
+        borderRadius='60px 0 0 60px'
+      />
 
-      <TabButton value={AUTH_TYPES.SIGN_UP} borderRadius='0 60px 60px 0'>
-        Sign up
-      </TabButton>
+      <TabButton
+        label='Sign up'
+        value={AUTH_TYPES.SIGN_UP}
+        borderRadius='0 60px 60px 0'
+      />
     </ToggleButtonGroup>
   );
 };

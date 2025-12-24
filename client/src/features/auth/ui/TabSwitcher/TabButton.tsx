@@ -1,14 +1,18 @@
+import type { ReactNode } from 'react';
 import { ToggleButton } from '@mui/material';
 import { buttonBaseSx } from './styles';
 import { type AuthModeType } from '@/shared/constants/api.constants';
+import { APP_COLORS } from '@/shared/constants/color.constants';
 
 interface TabButtonProps {
+  label: string;
   value: AuthModeType;
-  children: React.ReactNode;
+  children?: ReactNode;
   borderRadius: string;
 }
 
 export const TabButton = ({
+  label,
   value,
   children,
   borderRadius,
@@ -20,16 +24,16 @@ export const TabButton = ({
         ...buttonBaseSx,
         borderRadius,
         '&.Mui-selected': {
-          color: 'white',
+          color: APP_COLORS['main-white'],
           background: 'none',
         },
         '&.Mui-selected:hover': {
           background: 'none',
         },
-        color: '#666',
+        color: APP_COLORS['text-muted'],
       }}
     >
-      {children}
+      {label} {children}
     </ToggleButton>
   );
 };

@@ -1,17 +1,24 @@
 @import "tailwindcss";
 
-
 :root {
-  background-color: #aaaaaa;
-  --main-orange: #FF7B4E;
-  --main-gray:
-    --temp-highlight: #FFF9C4;
-  --bookmark-highlight: #FFEB3B;
-  --gradient-orange: linear-gradient(171.6deg, rgb(255, 123, 78), rgb(255, 88, 78) 100%);
+  --main-white: #f3f7fb;
+  --main-green: #1f5d2f;
+  --main-black: #1b1716;
+  --dark-blue: #38515b;
+  --dark-gray: #25252a;
+  --surface: #f5f5f5;
+  --surface-muted: #f9f9f9;
+  --surface-weak: #fafafa;
+  --text-muted: #666666;
+  --border-strong: #333333;
+  --border-muted: #cccccc;
+  --paper: #ffffff;
+  --ink: #000000;
+  --warning-soft: #ffeeee;
+  --temp-highlight: #fff9c4;
+  --bookmark-highlight: #ffeb3b;
+  --gradient-green-soft: linear-gradient(171.6deg, #1f5d2f, #38515b 40%, #5a676d 100%);
 }
-
-
-
 
 body {
   margin: 0;
@@ -20,6 +27,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: radial-gradient(circle at 20% 20%, rgba(56, 81, 91, 0.06), transparent 25%),
+    radial-gradient(circle at 80% 0%, rgba(31, 93, 47, 0.06), transparent 30%),
+    var(--main-white);
+  color: var(--main-black);
+  line-height: 1.6;
 }
 
 .text-reader-content {
@@ -35,4 +47,32 @@ body {
 .highlight-saved {
   background-color: var(--bookmark-highlight);
   font-weight: 500;
+}
+
+.glass-surface {
+  background: var(--paper);
+  border: 1px solid rgba(27, 23, 22, 0.04);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(4px);
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.glass-surface:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.08);
+  border-color: rgba(27, 23, 22, 0.08);
+}
+
+:root {
+  --space-xs: clamp(8px, 2vw, 12px);
+  --space-sm: clamp(12px, 3vw, 18px);
+  --space-md: clamp(16px, 4vw, 28px);
+  --space-lg: clamp(24px, 6vw, 40px);
+  --radius-md: clamp(14px, 4vw, 24px);
+  --radius-lg: clamp(20px, 5vw, 40px);
+  --font-base: clamp(14px, 1.5vw, 16px);
+}
+
+* {
+  font-size: var(--font-base);
 }
